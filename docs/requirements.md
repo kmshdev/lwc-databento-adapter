@@ -105,6 +105,10 @@ The hot path is asynchronous and does not perform blocking network or file opera
 
 The package targets the current verified Lightweight Charts 5.2 contract and declares `lightweight-charts` as a peer dependency. It must not depend on `lightweight-chart-react` or another chart wrapper. Production modules import the package API; the no-bundler demo fixture may use the equivalent `window.LightweightCharts` surface emitted from `src/standalone.ts`. Rust and TypeScript public APIs have documentation. Formatting, linting, type checking, unit tests, contract tests, integration tests, a production build, dependency audit, and the offline end-to-end test all pass without warnings.
 
+### REQ-Q-006 Dedicated connectivity latency
+
+The dedicated-connectivity target is Databento Live Raw API TCP delivery below 50 microseconds at the 90th percentile, measured from first byte entering Databento's boundary switch to last byte leaving onto the customer cross-connect. Qualification requires a 10G or 25G cross-connect at CyrusOne Aurora I (DC3) or Equinix NY4/5 and a circuit-specific measurement receipt. Browser page load, gateway processing, public-internet timing, and Databento's published 42.4-microsecond estimate are separate evidence and must not be reported as proof that this deployment meets the target.
+
 ## Assumptions
 
 - **ASM-001:** The repository is new, so the brief's preferred TypeScript client and Rust gateway architecture applies.
@@ -113,6 +117,7 @@ The package targets the current verified Lightweight Charts 5.2 contract and dec
 - **ASM-004:** Databento OHLCV is the only upstream data schema used to construct version 1 bars. Trades, BBO, and depth are deferred.
 - **ASM-005:** Capacity values are operator inputs. The design intentionally does not invent connection, queue, message, or subscription limits.
 - **ASM-006:** Offline tests use synthetic records and only sanitized DBN-derived fixtures whose storage is permitted.
+- **ASM-007:** Dedicated-connectivity site, provider, port, commercial approval, and circuit provisioning are external operator inputs; the repository does not invent or purchase them.
 
 ## Accepted product decisions
 

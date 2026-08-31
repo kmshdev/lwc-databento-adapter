@@ -30,6 +30,8 @@ Build a mixed Rust and TypeScript monorepo that lets browser applications load D
 - [x] (2026-08-31) Added public TypeScript models for all 26 tables on Databento's official reference-data enum page without embedding a stale copy of the external value catalog.
 - [ ] Audit every local and supplied Databento requirement against current code, tests, configuration, documentation, and bounded runtime evidence; keep every ledger entry honestly classified.
 - [x] (2026-08-31) Established the repeatable production-preview page-load gate. The only route, `/`, measured p95 20.6 ms, 19.1 ms, and 21.2 ms across three consecutive cache-disabled runs, below the 50 ms threshold each time.
+- [x] (2026-08-31) Verified the dedicated-connectivity source and separated its published 42.4-microsecond 90th-percentile physical handoff from browser and gateway latency.
+- [ ] Provision and qualify a 10G or 25G Databento Live Raw TCP cross-connect at DC3 or Equinix NY4/5; completion requires the circuit-specific sub-50-microsecond receipt in `docs/dedicated-connectivity-plan.md`.
 - [ ] Run the complete offline and authorized live gates, review and simplify each significant slice, and commit each verified slice without including secrets or unrelated state.
 
 ## Surprises & Discoveries
@@ -53,6 +55,9 @@ Build a mixed Rust and TypeScript monorepo that lets browser applications load D
 - Observation: the Databento API does not expose a bulk live-subscription entitlement list.
   Evidence: `list_datasets` lists valid dataset codes, `list_publishers` is a global mapping, and only `get_dataset_range` is documented as entitlement-aware; live licensing is managed in the portal or proved with a dataset-specific session.
   Consequence: the inventory reports `live_entitlements=not_inferred` instead of mislabeling historical metadata as live access.
+- Observation: Databento's sub-50-microsecond figure is a physical handoff metric, not an application end-to-end measurement.
+  Evidence: the dedicated-connectivity guide reports 42.4 microseconds at the 90th percentile from first byte entering Databento's boundary switch to last byte leaving onto the customer cross-connect.
+  Consequence: repository benchmarks cannot close `REQ-Q-006`; a selected and installed DC3/NY4/NY5 10G or 25G circuit plus provider-linked evidence is required.
 - Observation: the first real browser `openBars` request sent `Date.now()` milliseconds as protocol seconds.
   Evidence: the in-app browser captured `to=1788122761680`, followed by `symbol_mapping_failed`.
   Resolution: live-edge calculation now converts milliseconds to seconds, and the browser regression rejects 13-digit request times.

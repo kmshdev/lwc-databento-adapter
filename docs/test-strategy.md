@@ -160,6 +160,10 @@ Mandatory acceptance is: the scenario is reproducible, there is no unexplained r
 
 The current browser threshold is enforced by `mise run test:performance`. The route inventory is every HTML entry and configured router path; version 1 has only `/`. The task builds the demo, starts an isolated Vite production preview on loopback, launches the pinned headless Chromium, disables the browser cache, performs three warmups, and records 20 `PerformanceNavigationTiming.duration` samples at 1280 by 900 pixels. Each route must have p95 below 50 ms. Browser startup and build time are excluded. The runner prints the route, conditions, p95, and maximum so repeated runs remain comparable.
 
+### Dedicated-connectivity acceptance
+
+`REQ-Q-006` is an external physical qualification, not an offline test. Accept only a circuit-specific receipt containing the site, port speed, Live Raw TCP service, exact Databento boundary-switch-to-cross-connect measurement boundary, 90th percentile, sub-50-microsecond result, date, and measurement provenance. The published 42.4-microsecond estimate proves product capability, not this deployment. Public-network live tests, ICMP, browser timing, and gateway timers are explicitly non-qualifying.
+
 ## Mutation and negative verification
 
 Before closing the normalization, aggregation, handoff, protocol, and security tasks, deliberately introduce one representative fault per area and confirm a focused test fails: wrong bucket boundary, duplicate volume addition, snapshot after bar, cross-subscription routing, and credential inclusion. Restore the code and rerun the focused suite. Use mutation tooling where it supports the code cleanly; otherwise retain the explicit fault-injection record in the implementation plan.

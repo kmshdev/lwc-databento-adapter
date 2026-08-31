@@ -21,6 +21,7 @@ This matrix is a release gate, not an index for convenience. When a requirement,
 | `REQ-Q-003` Observability | Technical design: Observability | `TASK-07`, `TASK-10` | In-memory log/metric transition, reason, label, and redaction assertions | Observability test totals |
 | `REQ-Q-004` Performance | Technical design: component ownership/fan-out; Test strategy benchmark | `TASK-05`, `TASK-07`, `TASK-11` | Reproducible scenario; no-loss, interval-transition, configured-bound assertions; production-preview route p95 below 50 ms | Mandatory invariant pass plus `mise run test:performance` receipt under recorded conditions |
 | `REQ-Q-005` Compatibility/release | Technical design: Dependencies and Demo; core knowledge wrapper-removal contract; Test strategy gates | `TASK-00`, `TASK-01`, `TASK-11` | Compatibility spikes, generated typings comparison, official reference-data table model test, dependency/private-import scan, and all mandatory gates | Toolchain, lock revisions, zero-warning gate receipt |
+| `REQ-Q-006` Dedicated connectivity latency | Technical design: Dedicated connectivity latency boundary; dedicated connectivity plan | `TASK-12` | External circuit qualification only; local/public-network timing is non-qualifying | Dated circuit-specific 90th-percentile receipt below 50 microseconds |
 
 ## Accepted-decision trace
 

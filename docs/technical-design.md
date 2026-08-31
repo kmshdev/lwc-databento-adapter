@@ -641,6 +641,12 @@ Use Rust `tracing` with JSON output and a metrics facade whose exporter is selec
 
 Required counters/gauges/histograms are named in the requirements. Tests use an in-memory recorder and log capture to assert transitions and redaction; observability is not verified by visual inspection alone.
 
+## Dedicated connectivity latency boundary
+
+`REQ-Q-006` applies only to the physical Databento Live Raw API TCP handoff. The qualifying topology is a 10G or 25G cross-connect at DC3 or Equinix NY4/5. Its 90th-percentile measurement begins at Databento's boundary switch and ends when the last byte leaves onto the customer cross-connect.
+
+The Rust gateway remains downstream of this boundary. Its socket receive, decoding, normalization, aggregation, fan-out, and browser delivery latencies require separate timestamps and percentiles. No application benchmark may be relabeled as the cross-connect result. The complete provisioning and evidence contract is in `docs/dedicated-connectivity-plan.md`.
+
 ## Dependencies and versions researched on 2026-08-30
 
 | Dependency | Verified version | Role and boundary |

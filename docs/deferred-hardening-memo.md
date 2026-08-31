@@ -33,6 +33,12 @@ Track valuable work intentionally deferred while the project performs online bet
 
 ## Update log
 
+### 2026-08-31 — Dedicated-connectivity target
+
+- Added `REQ-Q-006` and `TASK-12` for the user-selected sub-50-microsecond target.
+- Preserved Databento's exact published boundary: Live Raw API TCP, 10G or 25G at DC3 or Equinix NY4/5, 90th percentile, boundary switch to customer cross-connect.
+- Recorded the current external block: no site, provider, port, commercial approval, installed circuit, or circuit-specific measurement receipt is available. Browser, public-network, and gateway timings are non-qualifying.
+
 ### 2026-08-31 — Contract loop, browser isolation, and page budget
 
 - Repaired all self-starting Puppeteer harnesses so foreign services on fixed development ports cannot satisfy readiness; explicit external URLs remain supported, while default runs allocate isolated gateway and demo ports.

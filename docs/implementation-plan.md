@@ -187,6 +187,18 @@ Acceptance criteria:
 - The optional zero-argument Databento metadata inventory distinguishes global catalogs, account-aware historical ranges, and live licensing; an access error is not reported as a functional pass.
 - Public package/API documentation matches exported signatures and protocol v1.
 
+### TASK-12 — Provision and qualify dedicated Live connectivity
+
+Select DC3, NY4, or NY5; select a colocation provider or managed services provider; obtain explicit commercial approval; arrange the Databento 10G or 25G Live Raw API TCP cross-connect; and collect the circuit-specific latency receipt defined in `docs/dedicated-connectivity-plan.md`.
+
+Acceptance criteria:
+
+- Databento confirms the installed circuit, site, port speed, Live service, and TCP Raw API handoff.
+- A dated measurement tied to that circuit reports the exact Databento boundary-switch-to-cross-connect boundary at the 90th percentile.
+- The measured value is strictly below 50 microseconds.
+- Gateway/application latency is measured separately and never substituted for the cross-connect result.
+- No commercial order, site selection, or infrastructure mutation occurs without explicit user authorization.
+
 ## Concrete commands
 
 Run from the repository root after the relevant tasks create the scripts:

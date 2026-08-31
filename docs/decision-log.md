@@ -151,6 +151,14 @@
 - Consequence: the successful session qualifies `GLBX.MDP3` authentication, acknowledgement, replay completion, and close; open-market bar events and other live datasets remain separate evidence.
 - Traces: `TASK-11`, `docs/test-strategy.md`, `mise run test:live-databento`.
 
+### DEC-018 — Sub-50-microsecond dedicated connectivity boundary
+
+- Status: Accepted by user target on 2026-08-31.
+- Decision: Treat sub-50 microseconds as the 90th-percentile Databento Live Raw TCP physical handoff from Databento's boundary switch to the customer cross-connect, using a 10G or 25G port at DC3 or Equinix NY4/5.
+- Rationale: This is the boundary and minimum topology documented by Databento for the published 42.4-microsecond estimate. Browser and gateway timers measure different systems.
+- Consequence: The target remains externally blocked until the user selects and authorizes a site/provider/port, the circuit is installed, and circuit-specific evidence is collected.
+- Traces: `REQ-Q-006`, `TASK-12`, `docs/dedicated-connectivity-plan.md`.
+
 ## Assumptions to validate during implementation
 
 - `ASM-001`: the new repository may use the prepared mixed-language layout.

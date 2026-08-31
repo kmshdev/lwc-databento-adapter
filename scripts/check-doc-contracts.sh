@@ -20,7 +20,8 @@ docs/review-route.md
 docs/lightweight-charts-core-knowledge.md
 docs/lightweight-charts-tutorial-knowledge.md
 docs/mise-plan.md
-docs/reviewer-convergence.md'
+docs/reviewer-convergence.md
+docs/dedicated-connectivity-plan.md'
 
 printf '%s\n' "$required_docs" | while IFS= read -r path; do
   if [ ! -s "$repo_root/$path" ]; then
