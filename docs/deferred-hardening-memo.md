@@ -38,6 +38,7 @@ Track valuable work intentionally deferred while the project performs online bet
 - Added `REQ-Q-006` and `TASK-12` for the user-selected sub-50-microsecond target.
 - Preserved Databento's exact published boundary: Live Raw API TCP, 10G or 25G at DC3 or Equinix NY4/5, 90th percentile, boundary switch to customer cross-connect.
 - Recorded the current external block: no site, provider, port, commercial approval, installed circuit, or circuit-specific measurement receipt is available. Browser, public-network, and gateway timings are non-qualifying.
+- Added a dated DC3 shortlist and RFQ packet. Provider facility presence is evidenced, but direct Databento cross-connect availability remains unverified until written responses are received.
 
 ### 2026-08-31 — Contract loop, browser isolation, and page budget
 

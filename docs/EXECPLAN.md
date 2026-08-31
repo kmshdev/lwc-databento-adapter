@@ -32,6 +32,7 @@ Build a mixed Rust and TypeScript monorepo that lets browser applications load D
 - [x] (2026-08-31) Established the repeatable production-preview page-load gate. The only route, `/`, measured p95 20.6 ms, 19.1 ms, and 21.2 ms across three consecutive cache-disabled runs, below the 50 ms threshold each time.
 - [x] (2026-08-31) Verified the dedicated-connectivity source and separated its published 42.4-microsecond 90th-percentile physical handoff from browser and gateway latency.
 - [ ] Provision and qualify a 10G or 25G Databento Live Raw TCP cross-connect at DC3 or Equinix NY4/5; completion requires the circuit-specific sub-50-microsecond receipt in `docs/dedicated-connectivity-plan.md`.
+- [x] (2026-08-31) Researched the current DC3 provider market and prepared a no-secrets RFQ. Beeks is the recommended small-footprint pilot candidate; Options Technology and Avelacom remain alternatives pending written Databento cross-connect confirmation.
 - [ ] Run the complete offline and authorized live gates, review and simplify each significant slice, and commit each verified slice without including secrets or unrelated state.
 
 ## Surprises & Discoveries

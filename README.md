@@ -16,6 +16,7 @@ The core local workflow is complete and the project is now in online beta testin
 - [Mise plan](docs/mise-plan.md) fixes tool/config ownership, secret handling, and the future task graph.
 - [Reviewer convergence](docs/reviewer-convergence.md) records the two independent reconstructions, repaired gaps, and material agreement.
 - [Dedicated connectivity qualification](docs/dedicated-connectivity-plan.md) defines the external physical evidence required for the sub-50-microsecond Live Raw API target.
+- [Dedicated connectivity RFQ](docs/dedicated-connectivity-rfq.md) records the dated DC3 provider shortlist and ready-to-send commercial and technical questions.
 - [Architecture](ARCHITECTURE.md) is the layout map and layer boundary. [Coding guidelines](CODING_GUIDELINES.md) records observed naming, test placement, and secret rules. [Project folder blueprint](Project_Folders_Structure_Blueprint.md) points at `ARCHITECTURE.md`.
 
 The accepted decisions are session-pinned continuous subscriptions, parent resolution followed by explicit child selection, and an explicit atomic Go-live reset. They are traced as `DEC-014`, `DEC-015`, and `DEC-016`.
