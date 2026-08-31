@@ -1,0 +1,20 @@
+{
+  "valid": true,
+  "direction": "server-event",
+  "payload": {
+    "v": 1,
+    "type": "subscribed",
+    "commandId": "cmd-open",
+    "subscriptionId": "sub-open",
+    "state": "replaying",
+    "resolvedSymbols": [
+      {
+        "dataset": "GLBX.MDP3",
+        "requestedSymbol": "ES.FUT",
+        "resolvedSymbol": "ESZ4",
+        "instrumentId": 123,
+        "effectiveFrom": 1700000000
+      }
+    ]
+  }
+}

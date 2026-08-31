@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "direction": "server-event",
+  "payload": {
+    "v": 1,
+    "type": "cancelled",
+    "commandId": "cmd-cancel",
+    "targetCommandId": "cmd-open",
+    "subscriptionId": "sub-open"
+  }
+}

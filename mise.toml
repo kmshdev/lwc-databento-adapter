@@ -1,0 +1,115 @@
+# ADR: docs/adr/2026-08-30-mise-env-centralized-config.md
+# Shared development configuration. Local credentials belong only in ignored
+# mise.local.toml and are never given a committed fallback.
+
+min_version = "2026.8.8"
+
+[tools]
+node = "24.20.0"
+pnpm = "11.19.0"
+rust = "1.97.1"
+
+[env]
+DATABENTO_GATEWAY_URL = "http://127.0.0.1:8080"
+LWC_DEMO_URL = "http://127.0.0.1:5173"
+PUPPETEER_CACHE_DIR = "{{config_root}}/.cache/puppeteer"
+
+[tasks."setup:tools"]
+description = "Install the pinned public Node, pnpm, and Rust toolchains."
+run = "mise install"
+
+[tasks."setup:hooks"]
+description = "Install repository pre-commit hooks when prek is available."
+run = "prek install"
+
+[tasks.setup]
+description = "Install public tools and repository hooks. Does not require Databento credentials."
+depends = ["setup:tools", "setup:hooks"]
+
+[tasks."docs:check"]
+description = "Validate documentation contracts and local references."
+run = "sh scripts/check-doc-contracts.sh"
+
+[tasks."structure:check"]
+description = "Validate the committed monorepo layout and dependency boundaries."
+run = "sh scripts/check-structure.sh"
+
+[tasks."secrets:check"]
+description = "Reject credential-looking values from non-ignored project files."
+run = "sh scripts/scan-secrets.sh"
+
+[tasks."fmt:check"]
+description = "Check TypeScript and Rust formatting without rewriting source files."
+run = "pnpm run format:check"
+
+[tasks.lint]
+description = "Run TypeScript linting and Rust Clippy with warnings denied."
+run = "pnpm run lint"
+
+[tasks.typecheck]
+description = "Type-check every TypeScript workspace package without emitting files."
+run = "pnpm run typecheck"
+
+[tasks."test:contracts"]
+description = "Run Rust and TypeScript protocol fixture contract tests."
+run = "pnpm run test:contracts"
+
+[tasks."test:rust"]
+description = "Run Rust workspace unit and integration tests."
+run = "pnpm run test:rust"
+
+[tasks."test:typescript"]
+description = "Run the framework-neutral TypeScript adapter tests."
+run = "pnpm run test:typescript"
+
+[tasks."test:gateway"]
+description = "Run gateway integration tests against fakeable local boundaries."
+run = "pnpm run test:gateway"
+
+[tasks.build]
+description = "Build the TypeScript workspaces and Rust workspace."
+run = "pnpm run build"
+
+[tasks."test:browser"]
+description = "Run the demo's local Puppeteer browser workflow."
+depends = ["build"]
+run = "pnpm run test:browser"
+
+[tasks."test:performance"]
+description = "Require every production-preview page to load with p95 below 50 ms under the recorded local benchmark conditions."
+depends = ["build"]
+run = "pnpm run test:performance"
+
+[tasks."test:package-consumer"]
+description = "Pack the adapter and compile it in an isolated Lightweight Charts project."
+depends = ["build"]
+run = "sh scripts/test-package-consumer.sh"
+
+[tasks.audit]
+description = "Run offline package and Rust dependency audit checks."
+run = "pnpm run audit"
+
+[tasks.check]
+description = "Run deterministic local-beta quality gates without Databento credentials."
+depends = ["docs:check", "structure:check", "secrets:check", "fmt:check", "lint", "typecheck", "test:contracts", "test:rust", "test:typescript", "test:gateway", "build", "test:browser", "test:performance", "test:package-consumer", "audit"]
+
+[tasks."dev:gateway"]
+description = "Run the opt-in official Databento local gateway on loopback; requires the ignored key."
+run = "pnpm run dev:gateway"
+
+[tasks."dev:gateway:seeded"]
+description = "Run the deterministic seeded loopback gateway for offline development."
+run = "pnpm run dev:gateway:seeded"
+
+[tasks."dev:demo"]
+description = "Run the local Vite demo on the configured loopback address."
+run = "pnpm run dev:demo"
+
+[tasks."test:live-databento"]
+description = "Run account discovery plus a bounded authenticated Databento live subscription/replay/close round trip."
+run = "sh scripts/test-live-databento.sh \"$@\""
+
+[tasks."test:live-integration"]
+description = "Run the published adapter API through the real gateway and Lightweight Charts demo in Chromium."
+depends = ["build"]
+run = "pnpm --filter @lwc-databento/demo run test:e2e:live"

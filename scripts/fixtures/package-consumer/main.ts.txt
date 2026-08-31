@@ -1,0 +1,73 @@
+import {
+  CandlestickSeries,
+  HistogramSeries,
+  createChart,
+  type UTCTimestamp,
+} from 'lightweight-charts';
+import { createDatabentoDataProvider } from '@lwc-databento/adapter';
+
+const chart = createChart(document.createElement('div'));
+const candles = chart.addSeries(CandlestickSeries);
+const volumes = chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' } }, 1);
+const provider = createDatabentoDataProvider({
+  gatewayUrl: 'http://127.0.0.1:8080',
+  historyChunkIntervals: 500,
+  reconnect: {
+    baseDelayMs: 250,
+    maxDelayMs: 8_000,
+    maxAttempts: 8,
+    jitterRatio: 0,
+  },
+});
+
+const page = await provider.getBars({
+  dataset: 'GLBX.MDP3',
+  symbol: 'ES.c.0',
+  stypeIn: 'continuous',
+  resolution: '1m',
+  from: 1_788_092_880 as UTCTimestamp,
+  to: 1_788_122_880 as UTCTimestamp,
+});
+candles.setData(page.bars);
+volumes.setData(page.volumes);
+
+const handlers = {
+  onBar: (bar: (typeof page.bars)[number]) => candles.update(bar),
+  onVolume: (volume: (typeof page.volumes)[number]) => volumes.update(volume),
+};
+const live = await provider.openBars(
+  {
+    dataset: 'GLBX.MDP3',
+    symbol: 'ES.c.0',
+    stypeIn: 'continuous',
+    resolution: '1m',
+    from: 1_788_092_880 as UTCTimestamp,
+    to: 1_788_122_880 as UTCTimestamp,
+  },
+  handlers,
+);
+candles.setData(live.initial.bars);
+volumes.setData(live.initial.volumes);
+await live.subscription.dispose();
+
+const streaming = await provider.subscribeBars(
+  {
+    dataset: 'GLBX.MDP3',
+    symbol: 'ES.c.0',
+    stypeIn: 'continuous',
+    resolution: '1m',
+  },
+  handlers,
+);
+await provider.resolveSymbol({
+  dataset: 'GLBX.MDP3',
+  symbols: ['ES.c.0'],
+  stypeIn: 'continuous',
+  from: 1_788_092_880 as UTCTimestamp,
+  to: 1_788_122_880 as UTCTimestamp,
+});
+await provider.searchSymbols({ dataset: 'GLBX.MDP3', query: 'ES', stypeIn: 'raw_symbol' });
+await provider.getDatasetMetadata('GLBX.MDP3');
+await streaming.dispose();
+await provider.dispose();
+chart.remove();

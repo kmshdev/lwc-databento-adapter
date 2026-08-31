@@ -1,0 +1,14 @@
+{
+  "valid": true,
+  "direction": "http-response",
+  "payload": {
+    "v": 1,
+    "requestId": "req-error",
+    "error": {
+      "code": "unsupported_parent_series",
+      "message": "Select a resolved child instrument",
+      "retryable": false,
+      "details": {}
+    }
+  }
+}

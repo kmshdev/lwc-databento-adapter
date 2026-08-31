@@ -1,0 +1,22 @@
+{
+  "valid": true,
+  "direction": "server-event",
+  "payload": {
+    "v": 1,
+    "type": "snapshot",
+    "subscriptionId": "sub-open",
+    "bars": [{ "time": 1700000000, "open": 100, "high": 102, "low": 99, "close": 101 }],
+    "volumes": [{ "time": 1700000000, "value": 42 }],
+    "metadata": [
+      {
+        "time": 1700000000,
+        "dataset": "GLBX.MDP3",
+        "requestedSymbol": "ESZ4",
+        "resolvedSymbol": "ESZ4",
+        "instrumentId": 123,
+        "sourceSchema": "ohlcv-1m",
+        "synthetic": false
+      }
+    ]
+  }
+}

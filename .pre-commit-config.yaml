@@ -1,0 +1,21 @@
+repos:
+  - repo: local
+    hooks:
+      - id: docs-contracts
+        name: documentation contracts
+        entry: sh scripts/check-doc-contracts.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: structure
+        name: monorepo structure
+        entry: sh scripts/check-structure.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: secrets
+        name: credential sentinel
+        entry: sh scripts/scan-secrets.sh
+        language: system
+        pass_filenames: false
+        always_run: true

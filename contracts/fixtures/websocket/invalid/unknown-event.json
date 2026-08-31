@@ -1,0 +1,5 @@
+{
+  "valid": false,
+  "direction": "server-event",
+  "payload": { "v": 1, "type": "invented_event", "subscriptionId": "sub-open" }
+}

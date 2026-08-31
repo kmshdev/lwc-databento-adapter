@@ -1,0 +1,19 @@
+{
+  "valid": true,
+  "direction": "client-command",
+  "payload": {
+    "v": 1,
+    "type": "open_bars",
+    "commandId": "cmd-open",
+    "subscriptionId": "sub-open",
+    "request": {
+      "dataset": "GLBX.MDP3",
+      "symbol": "ESZ4",
+      "stypeIn": "raw_symbol",
+      "resolution": "5m",
+      "from": 1700000000,
+      "to": 1700003600,
+      "gapPolicy": "preserve-gaps"
+    }
+  }
+}

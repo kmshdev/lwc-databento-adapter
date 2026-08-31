@@ -1,0 +1,17 @@
+{
+  "valid": true,
+  "direction": "http-response",
+  "payload": {
+    "v": 1,
+    "requestId": "req-resolve",
+    "mappings": [
+      {
+        "dataset": "GLBX.MDP3",
+        "requestedSymbol": "ES.FUT",
+        "resolvedSymbol": "ESZ4",
+        "instrumentId": 123,
+        "effectiveFrom": 1700000000
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "lwc-databento-adapter-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "pnpm run test:rust && pnpm run test:typescript && pnpm run test:gateway",
+    "test:e2e:offline": "pnpm run test:browser",
+    "format:check": "pnpm --filter @lwc-databento/adapter --filter @lwc-databento/demo --if-present run format:check && cargo fmt --all -- --check",
+    "lint": "pnpm --filter @lwc-databento/adapter --filter @lwc-databento/demo --if-present run lint && cargo clippy --workspace --all-targets --all-features -- -D warnings",
+    "typecheck": "pnpm --filter @lwc-databento/adapter --filter @lwc-databento/demo --if-present run typecheck",
+    "test:contracts": "pnpm --filter @lwc-databento/adapter --if-present run test:contract && cargo test --workspace --all-features protocol_contract",
+    "test:rust": "cargo test --workspace --all-features",
+    "test:typescript": "pnpm --filter @lwc-databento/adapter --if-present run test",
+    "test:gateway": "cargo test -p databento-gateway --all-features",
+    "build": "pnpm --filter @lwc-databento/adapter --filter @lwc-databento/demo --if-present run build && cargo build --workspace --all-features",
+    "test:browser": "pnpm --filter @lwc-databento/demo --if-present run test:e2e",
+    "test:performance": "pnpm --filter @lwc-databento/demo --if-present run test:performance",
+    "audit": "pnpm audit --offline --prod --audit-level=high && cargo deny check",
+    "dev:gateway": "DATABENTO_GATEWAY_SOURCE=historical cargo run -p databento-gateway --features databento-compat",
+    "dev:gateway:seeded": "DATABENTO_GATEWAY_SOURCE=seeded cargo run -p databento-gateway",
+    "dev:demo": "env -u DATABENTO_API_KEY pnpm --filter @lwc-databento/demo run dev"
+  },
+  "devDependencies": {
+    "@types/ws": "8.18.1",
+    "lightweight-charts": "5.2.1",
+    "oxfmt": "0.65.0",
+    "oxlint": "1.80.0",
+    "puppeteer": "24.6.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
+    "ws": "8.21.3",
+    "zod": "4.5.4"
+  },
+  "engines": {
+    "node": ">=24.20.0 <25",
+    "pnpm": "11.19.0"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

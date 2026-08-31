@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Databento Lightweight Charts demo</title>
+  </head>
+  <body>
+    <main class="shell">
+      <h1>Databento Lightweight Charts</h1>
+      <form id="history-form" class="controls" aria-label="Market data controls">
+        <label>Dataset <input id="dataset" name="dataset" value="GLBX.MDP3" required /></label>
+        <label>Symbol <input id="symbol" name="symbol" value="ES.c.0" required /></label>
+        <label
+          >Symbol type
+          <select id="stype" name="stypeIn">
+            <option value="raw_symbol">Raw symbol</option>
+            <option value="continuous" selected>Continuous</option>
+            <option value="parent">Parent</option>
+            <option value="instrument_id">Instrument ID</option>
+          </select>
+        </label>
+        <label
+          >Resolution
+          <select id="resolution" name="resolution">
+            <option>1s</option>
+            <option>5s</option>
+            <option>15s</option>
+            <option>30s</option>
+            <option>1m</option>
+            <option>5m</option>
+            <option selected>15m</option>
+            <option>30m</option>
+            <option>1h</option>
+            <option>2h</option>
+            <option>4h</option>
+            <option>1d</option>
+          </select>
+        </label>
+        <label>From <input id="from" name="from" type="datetime-local" required /></label>
+        <label>To <input id="to" name="to" type="datetime-local" required /></label>
+        <button type="submit">Load history</button>
+        <button id="go-live" type="button">Go to realtime</button>
+        <button id="disconnect" type="button">Disconnect</button>
+        <button id="fit-content" type="button">Fit content</button>
+        <button id="toggle-volume" type="button" aria-pressed="true">Hide volume pane</button>
+      </form>
+      <section id="parent-picker" hidden aria-live="polite" aria-label="Choose resolved instrument">
+        <label
+          >Choose instrument
+          <select id="child-symbol"></select
+        ></label>
+        <button id="use-child" type="button">Load selected instrument</button>
+      </section>
+      <p id="notice" role="status" aria-live="polite">Ready.</p>
+      <p id="error" role="alert" hidden></p>
+      <section class="chart-region" aria-label="Price and volume chart">
+        <div id="chart" tabindex="0" aria-label="Candlestick and volume chart"></div>
+        <dl id="legend" class="legend" aria-label="Selected bar" hidden></dl>
+        <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

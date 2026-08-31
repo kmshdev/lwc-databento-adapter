@@ -1,0 +1,11 @@
+{
+  "valid": false,
+  "direction": "client-command",
+  "payload": {
+    "v": 1,
+    "type": "unsubscribe",
+    "commandId": "cmd-remove",
+    "subscriptionId": "sub-open",
+    "secret": "sentinel-not-a-secret"
+  }
+}

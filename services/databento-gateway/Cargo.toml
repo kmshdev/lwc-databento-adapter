@@ -1,0 +1,28 @@
+[package]
+name = "databento-gateway"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+default = []
+databento-compat = ["dep:databento"]
+
+[dependencies]
+async-trait = "0.1.89"
+axum = { version = "=0.8.9", features = ["json", "ws", "tokio"] }
+futures = "0.3.31"
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "1.0.145"
+thiserror = "2.0.17"
+tokio = { version = "=1.53.1", features = ["full"] }
+tower-http = { version = "=0.7.0", features = ["cors", "trace", "limit"] }
+tracing = "=0.1.44"
+tracing-subscriber = { version = "0.3.19", features = ["fmt", "env-filter"] }
+
+databento = { version = "=0.60.0", optional = true }
+time = { version = "=0.3.55", default-features = false, features = ["std"] }
+
+[dev-dependencies]
+anyhow = "1.0.100"
+proptest = "1.7.0"

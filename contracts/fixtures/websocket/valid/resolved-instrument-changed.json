@@ -1,0 +1,15 @@
+{
+  "valid": true,
+  "direction": "server-event",
+  "payload": {
+    "v": 1,
+    "type": "error",
+    "subscriptionId": "sub-open",
+    "error": {
+      "code": "resolved_instrument_changed",
+      "message": "Continuous symbol resolved to a different instrument",
+      "retryable": false,
+      "details": {}
+    }
+  }
+}

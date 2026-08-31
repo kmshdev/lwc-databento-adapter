@@ -1,0 +1,12 @@
+{
+  "name": "lwc-databento-external-consumer-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "lightweight-charts": "5.2.1"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

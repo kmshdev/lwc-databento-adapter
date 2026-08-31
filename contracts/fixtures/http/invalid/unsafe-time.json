@@ -1,0 +1,11 @@
+{
+  "valid": false,
+  "direction": "http-response",
+  "payload": {
+    "v": 1,
+    "requestId": "req-invalid",
+    "bars": [{ "time": 9007199254740992, "open": 100, "high": 102, "low": 99, "close": 101 }],
+    "volumes": [],
+    "metadata": []
+  }
+}
