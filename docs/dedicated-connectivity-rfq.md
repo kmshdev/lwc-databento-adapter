@@ -25,6 +25,19 @@ Sources verified 2026-08-31:
 - [Beeks CME Connect](https://beeksgroup.com/services/connectivity/colocation-hosting/cme-connect/)
 - [Databento CME colocation overview](https://databento.com/blog/cme-colocation)
 
+## Official outreach routes
+
+Use these routes for the RFQ; they were verified on 2026-08-31:
+
+| Recipient | Official route |
+| --- | --- |
+| Databento | [Contact sales](https://databento.com/contact) |
+| Beeks Financial Cloud | [Product or service enquiry](https://beeksgroup.com/contact/) |
+| Options Technology | [sales@options-it.com](mailto:sales@options-it.com) |
+| Avelacom | [sales@avelacom.com](mailto:sales@avelacom.com) |
+
+Sending the RFQ is an external action and requires explicit approval. Use an approved private channel if the message includes account, entitlement, commercial, or strategy details.
+
 ## Send to Databento and each provider
 
 **Subject:** RFQ: Databento Live Raw TCP cross-connect at CyrusOne Aurora I
@@ -54,3 +67,14 @@ Do not place an order based on marketing latency, an Aurora-campus location, or 
 - circuit-specific p90 measurement ownership.
 
 The RFQ contains no account identifier, API key, entitlement identifier, or trading strategy. Add sensitive commercial or account data only in an approved private channel.
+
+## Response ledger
+
+Update this table only from written responses. A blank or marketing claim is not confirmation.
+
+| Party | Contact status | Aurora I confirmed | Direct Databento cross-connect confirmed | Price and term | Measurement owner |
+| --- | --- | --- | --- | --- | --- |
+| Databento | Not contacted | Pending | Pending | Pending | Pending |
+| Beeks Financial Cloud | Not contacted | Pending | Pending | Pending | Pending |
+| Options Technology | Not contacted | Pending | Pending | Pending | Pending |
+| Avelacom | Not contacted | Pending | Pending | Pending | Pending |
