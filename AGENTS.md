@@ -7,6 +7,11 @@ Mixed Rust/TypeScript monorepo: Rust gateway owns Databento credentials and mark
 - Prioritize history-to-live workflow, basic product functions, algorithm and execution-pipeline refinement, ToB/C APIs, reusable adapter integration, and online-beta deployment.
 - Do not turn feature work into a production-hardening program.
 
+## Repository Status
+- Public OSS repo: `github.com/kmshdev/lwc-databento-adapter`, default branch `main`.
+- Do not reintroduce machine-specific absolute paths (e.g. `/Users/<name>/...`) into tracked docs or code.
+- Local `DATABENTO_API_KEY` lives only in gitignored `mise.local.toml`; there is no `.env` file. Never add one under version control.
+
 ## Scope Rules
 - Deliver the smallest coherent online-beta slice that exercises the real workflow and stable public interfaces.
 - Credentials stay server-side; bound and validate external inputs; errors must not claim false continuity or success.
@@ -24,6 +29,7 @@ Mixed Rust/TypeScript monorepo: Rust gateway owns Databento credentials and mark
 | Full offline gate | `mise run check` |
 | External package consumer | `mise run test:package-consumer` |
 | Real provider integration | `mise run test:live-integration` |
+| Bounded live Databento round trip | `mise run test:live-databento` |
 
 ## Workspace
 | Tree | Instructions |
