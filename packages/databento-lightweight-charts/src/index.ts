@@ -1,6 +1,14 @@
 export { createDatabentoDataProvider } from './provider/index.js';
 export { DatabentoProviderError } from './errors/index.js';
 export { referenceDataEnumNames } from './types/reference-data.js';
+export { bindSeries, toBarFeed } from './feed/index.js';
+export type {
+  BarEvent as FeedBarEvent,
+  BarFeed,
+  BarSink,
+  FeedBar,
+  ISeriesApiLike,
+} from './feed/index.js';
 export type {
   BarHandlers,
   BarMetadata,
