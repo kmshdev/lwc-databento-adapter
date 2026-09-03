@@ -113,3 +113,10 @@ Track valuable work intentionally deferred while the project performs online bet
 - Fixed a documentation/implementation drift: the demo's live-edge lookback now shares one constant with `historyChunkIntervals` instead of an independent hardcoded value that happened to match by coincidence.
 - Cleaned up the working tree for public release: removed the untracked, third-party AI-skill bundle (`.agents/`, `skills-lock.json`, both already git-ignored globally) and scrubbed local absolute filesystem paths (`/Users/kmsh/...`) leaked in `docs/EXECPLAN.md`, `docs/mise-plan.md`, and `docs/review-route.md`. No credentials were present in tracked history (`scripts/scan-secrets.sh` passes clean).
 - Deferred, unchanged: broad security overhauls, penetration/soak testing, and production SLO work remain out of scope for the online-beta phase.
+
+### 2026-09-04 — Additive BarFeed/bindSeries wrapper implemented
+
+- Implemented the `BarFeed`/`bindSeries` wrapper that `DEC-020` had deferred behind a concrete trigger; the user's explicit direction to build the previously delivered architecture diagram functioned as that trigger.
+- `toBarFeed`/`bindSeries` live in `packages/databento-lightweight-charts/src/feed/index.ts`, wrap `DatabentoDataProvider` non-breakingly, and are covered by six new unit tests (`test/unit/feed.test.ts`); the existing provider export and its Databento-specific request vocabulary (`dataset`, `stypeIn`) are untouched.
+- `BarEvent.historicalUpdate` is currently always `undefined` from `toBarFeed` because the wire protocol still has no revision signal — that follow-up (tracked in `DEC-020`) remains deferred and independent of this wrapper.
+- Deferred, unchanged: broad security overhauls, penetration/soak testing, production SLO work, and the wire-protocol `revision` extension remain out of scope for this change.

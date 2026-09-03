@@ -80,6 +80,41 @@ Use `resolveSymbol` before requesting bars for a parent symbol, select one retur
 
 The public surface also includes `subscribeBars`, `searchSymbols`, `getDatasetMetadata`, cancellation through `AbortSignal`, and idempotent disposal. It imports Lightweight Charts types directly and has no UI-framework dependency.
 
+## Wiring a series directly: `BarFeed` and `bindSeries`
+
+`toBarFeed`/`bindSeries` are a thin, additive layer over `openBars` for the common case of
+feeding one Lightweight Charts series without hand-writing the `setData`/`update` glue:
+
+```ts
+import { createDatabentoDataProvider, toBarFeed, bindSeries } from '@lwc-databento/adapter';
+
+const provider = createDatabentoDataProvider({ /* ... */ });
+const feed = toBarFeed(provider);
+const series = chart.addSeries(CandlestickSeries);
+
+const live = await bindSeries(feed, series, {
+  dataset: 'GLBX.MDP3',
+  symbol: 'ES.c.0',
+  stypeIn: 'continuous',
+  resolution: '1m',
+  from: 1_788_092_880 as UTCTimestamp,
+  to: 1_788_122_880 as UTCTimestamp,
+});
+
+// Component teardown:
+await live.subscription.dispose();
+await provider.dispose();
+```
+
+`bindSeries` calls `series.setData(...)` with the initial page and `series.update(bar, historicalUpdate)`
+for each subsequent event, forwarding any `onState`/`onError`/`onSymbolMapping` handlers supplied.
+`series` only needs to satisfy the structural `ISeriesApiLike` interface, not the full Lightweight
+Charts `ISeriesApi`. `BarEvent.historicalUpdate` is currently always `undefined` from `toBarFeed`
+because the wire protocol has no revision signal yet (see `DEC-020` in `docs/decision-log.md`);
+the field exists so `bindSeries` is ready for that extension without a breaking change. Consumers
+who need `onState`/`onError`/custom batching should keep using `provider.openBars` directly — the
+wrapper is optional, not a replacement for the provider's public API.
+
 ## Reference-data models
 
 `referenceDataEnumNames` and `ReferenceDataEnumTable` model every table in Databento's
