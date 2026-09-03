@@ -30,8 +30,23 @@ Track valuable work intentionally deferred while the project performs online bet
 | Dataset actor compaction after canonical churn | Databento has no per-subscription live unsubscribe; actor registration is idempotent, so reactivation cannot duplicate routing, but inactive upstream requests live until the dataset client closes | Representative symbol churn on shared dataset sessions | Bounded churn test plus an actor rotation/compaction policy that preserves active streams and replay continuity |
 | Production SLOs, alerting, capacity planning, and disaster recovery | Meaningful targets require representative beta traffic and operational ownership | Sustained beta traffic or production-readiness planning | SLOs, dashboards, alerts, capacity model, recovery drill |
 | Full upstream Lightweight Charts browser matrix | The upstream checkout currently lacks installed Puppeteer dependencies and standalone bundles | Adapter demo exists and browser behavior is integration-critical | Puppeteer results across required DPR, resize, pane, accessibility, and cleanup cases |
+| Numeric range annotations in the generated protocol schema (safe-integer time bounds) | `DEC-019` shipped structural schema generation; unsafe-time rejection already lives in the Rust and Zod validators, so schema-level bounds add no active-phase safety | Third-party consumers validate against `contracts/protocol-v1.schema.json` alone, without the Zod package | `schemars(range(...))` annotations on wire time fields plus invalid fixtures failing schema validation structurally |
 
 ## Update log
+
+### 2026-09-04 — Machine-generated wire schema (DEC-019 implemented)
+
+- Implemented the reduced-scope `DEC-019`: `schemars` derives (feature `json-schema`) on the gateway's protocol types generate `contracts/protocol-v1.schema.json`; the `protocol_contract_schema` test fails when the committed schema is stale and runs inside the standard `--all-features` contract gate.
+- Added a TypeScript contract test (Ajv, draft 2020-12) proving every valid shared fixture satisfies the generated schema and that unknown command fields are structurally rejected; Zod schemas remain hand-written because they carry semantic refinements beyond structural schema.
+- Deferred: numeric range annotations (safe-integer time bounds) in the generated schema, needed only if third parties validate against the schema without the Zod package.
+
+### 2026-09-04 — Feed-interface design review against Lightweight Charts source
+
+- Reviewed `lightweight-charts` 5.2.1 source (`src/model/data-consumer.ts`, `src/api/iseries-api.ts`, `src/model/horz-scale-behavior-time/types.ts`) and `@tradingview/lwc-toolkit`: core is push-only (`setData`/`update(bar, historicalUpdate?)`) with no datafeed abstraction; the toolkit is plugin-authoring utilities, not a data layer.
+- Recorded `DEC-020` (proposed): provider-neutral `BarFeed`/`BarSink` typed in Lightweight Charts vocabulary, Databento vocabulary quarantined behind an opaque `SymbolRef`, structural `bindSeries` helper, optional `revision` bar-event flag mapping to `historicalUpdate`, optional TradingView Datafeed-API shim.
+- Revised `DEC-020` the same day after a backward/forward causal-map review: the breaking restructuring is rejected (requirements define "reusable" as a reusable Databento package, already satisfied; zero external consumers exist; an opaque `SymbolRef` would hide continuous-contract and parent-resolution controls per `DEC-014`/`DEC-015`). The neutral wrapper is deferred behind a concrete trigger — an external adopter requesting neutrality or a planned second provider. The `revision`/`historicalUpdate` protocol extension may proceed independently.
+- Narrowed `DEC-019`: runtime validation stays only for the wire envelope; broad Rust→Zod codegen is mostly dissolved by using Lightweight Charts types as the single payload-type authority.
+- Deferred until `DEC-020` is confirmed: public-API restructuring, `revision`/`historicalUpdate` protocol extension, Datafeed-API compatibility shim.
 
 ### 2026-08-31 — Dedicated-connectivity target
 

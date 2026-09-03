@@ -11,6 +11,7 @@ const fn protocol_version() -> u8 {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum SymbolType {
     #[serde(rename = "raw_symbol")]
@@ -24,6 +25,7 @@ pub enum SymbolType {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "lowercase")]
 pub enum Resolution {
     #[serde(rename = "1s")]
@@ -100,6 +102,7 @@ impl Resolution {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "kebab-case")]
 pub enum GapPolicy {
     #[default]
@@ -109,6 +112,7 @@ pub enum GapPolicy {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum ProviderState {
     Idle,
@@ -121,6 +125,7 @@ pub enum ProviderState {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum StatusReason {
     InitialConnect,
@@ -136,6 +141,7 @@ pub enum StatusReason {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "kebab-case")]
 pub enum SourceSchema {
     #[serde(rename = "ohlcv-1s")]
@@ -149,6 +155,7 @@ pub enum SourceSchema {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "snake_case")]
 pub enum ProviderErrorCode {
     InvalidRequest,
@@ -175,6 +182,7 @@ pub enum ProviderErrorCode {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 pub struct ProviderError {
     pub code: ProviderErrorCode,
     pub message: String,
@@ -184,6 +192,7 @@ pub struct ProviderError {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct ErrorResponse {
     pub v: u8,
@@ -192,6 +201,7 @@ pub struct ErrorResponse {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BarRequest {
     #[serde(default = "protocol_version")]
@@ -211,6 +221,7 @@ impl BarRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HistoryRequest {
     #[serde(default = "protocol_version")]
@@ -232,6 +243,7 @@ impl HistoryRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ResolveRequest {
     #[serde(default = "protocol_version")]
@@ -244,6 +256,7 @@ pub struct ResolveRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SearchRequest {
     #[serde(default = "protocol_version")]
@@ -254,6 +267,7 @@ pub struct SearchRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct SearchResult {
     pub dataset: String,
@@ -264,6 +278,7 @@ pub struct SearchResult {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct SearchResponse {
     pub v: u8,
@@ -272,6 +287,7 @@ pub struct SearchResponse {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct SymbolMapping {
     pub dataset: String,
@@ -284,6 +300,7 @@ pub struct SymbolMapping {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct ResolveResponse {
     pub v: u8,
@@ -292,6 +309,7 @@ pub struct ResolveResponse {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct PublisherMetadata {
     pub publisher_id: i64,
@@ -300,6 +318,7 @@ pub struct PublisherMetadata {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct DatasetMetadata {
     pub dataset: String,
@@ -312,6 +331,7 @@ pub struct DatasetMetadata {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct DatasetResponse {
     pub v: u8,
@@ -320,6 +340,7 @@ pub struct DatasetResponse {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(untagged)]
 pub enum ChartBar {
     Whitespace {
@@ -335,6 +356,7 @@ pub enum ChartBar {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct BarMetadata {
     pub dataset: String,
@@ -346,6 +368,7 @@ pub struct BarMetadata {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct MetadataPoint {
     pub time: i64,
@@ -354,6 +377,7 @@ pub struct MetadataPoint {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct VolumePoint {
     pub time: i64,
@@ -363,6 +387,7 @@ pub struct VolumePoint {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BarPageResponse {
     pub v: u8,
@@ -400,12 +425,14 @@ impl BarPageResponse {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase")]
 pub struct RequestEnvelope {
     pub request_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SubscribeBarsCommand {
     pub v: u8,
@@ -415,6 +442,7 @@ pub struct SubscribeBarsCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OpenBarsCommand {
     pub v: u8,
@@ -424,6 +452,7 @@ pub struct OpenBarsCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ResumeBarsCommand {
     pub v: u8,
@@ -434,6 +463,7 @@ pub struct ResumeBarsCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct UnsubscribeCommand {
     pub v: u8,
@@ -442,6 +472,7 @@ pub struct UnsubscribeCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CancelCommand {
     pub v: u8,
@@ -451,6 +482,7 @@ pub struct CancelCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ClientCommand {
     #[serde(rename = "subscribe_bars")]
@@ -466,6 +498,7 @@ pub enum ClientCommand {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SubscribedEvent {
     pub v: u8,
@@ -476,6 +509,7 @@ pub struct SubscribedEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SnapshotEvent {
     pub v: u8,
@@ -486,6 +520,7 @@ pub struct SnapshotEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct BarEvent {
     pub v: u8,
@@ -496,6 +531,7 @@ pub struct BarEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct StatusEvent {
     pub v: u8,
@@ -507,6 +543,7 @@ pub struct StatusEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SymbolMappingEvent {
     pub v: u8,
@@ -518,6 +555,7 @@ pub struct SymbolMappingEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct UnsubscribedEvent {
     pub v: u8,
@@ -526,6 +564,7 @@ pub struct UnsubscribedEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CancelledEvent {
     pub v: u8,
@@ -535,6 +574,7 @@ pub struct CancelledEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ErrorEvent {
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -546,6 +586,7 @@ pub struct ErrorEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct HeartbeatEvent {
     pub v: u8,
@@ -553,6 +594,7 @@ pub struct HeartbeatEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ServerEvent {
     #[serde(rename = "subscribed")]
@@ -593,6 +635,7 @@ pub struct ResolvedStreamKey {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum StreamDirection {
     Upstream,

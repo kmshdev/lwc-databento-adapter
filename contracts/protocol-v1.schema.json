@@ -1,0 +1,1212 @@
+{
+  "$defs": {
+    "BarMetadata": {
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "instrumentId": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "requestedSymbol": {
+          "type": "string"
+        },
+        "resolvedSymbol": {
+          "type": "string"
+        },
+        "sourceSchema": {
+          "$ref": "#/$defs/SourceSchema"
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "dataset",
+        "requestedSymbol",
+        "resolvedSymbol",
+        "instrumentId",
+        "sourceSchema",
+        "synthetic"
+      ],
+      "type": "object"
+    },
+    "BarPageResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "bars": {
+          "items": {
+            "$ref": "#/$defs/ChartBar"
+          },
+          "type": "array"
+        },
+        "metadata": {
+          "items": {
+            "$ref": "#/$defs/MetadataPoint"
+          },
+          "type": "array"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "v": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "volumes": {
+          "items": {
+            "$ref": "#/$defs/VolumePoint"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "v",
+        "requestId",
+        "bars",
+        "volumes",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "BarRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "gapPolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GapPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        },
+        "stypeIn": {
+          "$ref": "#/$defs/SymbolType"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "v": {
+          "default": 1,
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dataset",
+        "symbol",
+        "stypeIn",
+        "resolution"
+      ],
+      "type": "object"
+    },
+    "ChartBar": {
+      "anyOf": [
+        {
+          "properties": {
+            "time": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "time"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "close": {
+              "format": "double",
+              "type": "number"
+            },
+            "high": {
+              "format": "double",
+              "type": "number"
+            },
+            "low": {
+              "format": "double",
+              "type": "number"
+            },
+            "open": {
+              "format": "double",
+              "type": "number"
+            },
+            "time": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "time",
+            "open",
+            "high",
+            "low",
+            "close"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ClientCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "request": {
+              "$ref": "#/$defs/BarRequest"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "subscribe_bars",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId",
+            "request"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "request": {
+              "$ref": "#/$defs/HistoryRequest"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "open_bars",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId",
+            "request"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "request": {
+              "$ref": "#/$defs/BarRequest"
+            },
+            "resumeFrom": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "resume_bars",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId",
+            "resumeFrom",
+            "request"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "unsubscribe",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "targetCommandId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "cancel",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "targetCommandId",
+            "subscriptionId"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "DatasetMetadata": {
+      "properties": {
+        "availableFrom": {
+          "format": "int64",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "availableTo": {
+          "format": "int64",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "dataset": {
+          "type": "string"
+        },
+        "publishers": {
+          "items": {
+            "$ref": "#/$defs/PublisherMetadata"
+          },
+          "type": "array"
+        },
+        "schemas": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset",
+        "schemas",
+        "publishers"
+      ],
+      "type": "object"
+    },
+    "DatasetResponse": {
+      "properties": {
+        "metadata": {
+          "$ref": "#/$defs/DatasetMetadata"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "v": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "v",
+        "requestId",
+        "metadata"
+      ],
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "properties": {
+        "error": {
+          "$ref": "#/$defs/ProviderError"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "v": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "v",
+        "requestId",
+        "error"
+      ],
+      "type": "object"
+    },
+    "GapPolicy": {
+      "enum": [
+        "preserve-gaps",
+        "whitespace",
+        "carry-forward"
+      ],
+      "type": "string"
+    },
+    "HistoryRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "from": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "gapPolicy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GapPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resolution": {
+          "$ref": "#/$defs/Resolution"
+        },
+        "stypeIn": {
+          "$ref": "#/$defs/SymbolType"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "to": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "v": {
+          "default": 1,
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dataset",
+        "symbol",
+        "stypeIn",
+        "resolution",
+        "from",
+        "to"
+      ],
+      "type": "object"
+    },
+    "MetadataPoint": {
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "instrumentId": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "requestedSymbol": {
+          "type": "string"
+        },
+        "resolvedSymbol": {
+          "type": "string"
+        },
+        "sourceSchema": {
+          "$ref": "#/$defs/SourceSchema"
+        },
+        "synthetic": {
+          "type": "boolean"
+        },
+        "time": {
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "time",
+        "dataset",
+        "requestedSymbol",
+        "resolvedSymbol",
+        "instrumentId",
+        "sourceSchema",
+        "synthetic"
+      ],
+      "type": "object"
+    },
+    "ProviderError": {
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/ProviderErrorCode"
+        },
+        "details": {
+          "default": null
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "type": "object"
+    },
+    "ProviderErrorCode": {
+      "enum": [
+        "invalid_request",
+        "invalid_range",
+        "range_too_large",
+        "origin_forbidden",
+        "dataset_forbidden",
+        "unsupported_dataset",
+        "unsupported_schema",
+        "unsupported_resolution",
+        "symbol_not_found",
+        "symbol_mapping_failed",
+        "unsupported_parent_series",
+        "resolved_instrument_changed",
+        "unsupported_live_symbology",
+        "access_denied",
+        "quota_exceeded",
+        "slow_consumer",
+        "replay_unavailable",
+        "upstream_unavailable",
+        "cancelled",
+        "protocol_error",
+        "internal"
+      ],
+      "type": "string"
+    },
+    "ProviderState": {
+      "enum": [
+        "idle",
+        "connecting",
+        "replaying",
+        "live",
+        "reconnecting",
+        "failed",
+        "closed"
+      ],
+      "type": "string"
+    },
+    "PublisherMetadata": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "publisherId": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "venue": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "publisherId",
+        "name",
+        "venue"
+      ],
+      "type": "object"
+    },
+    "Resolution": {
+      "enum": [
+        "1s",
+        "5s",
+        "15s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "4h",
+        "1d"
+      ],
+      "type": "string"
+    },
+    "ResolveRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "from": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "stypeIn": {
+          "$ref": "#/$defs/SymbolType"
+        },
+        "symbols": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "to": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "v": {
+          "default": 1,
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dataset",
+        "symbols",
+        "stypeIn",
+        "from",
+        "to"
+      ],
+      "type": "object"
+    },
+    "ResolveResponse": {
+      "properties": {
+        "mappings": {
+          "items": {
+            "$ref": "#/$defs/SymbolMapping"
+          },
+          "type": "array"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "v": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "v",
+        "requestId",
+        "mappings"
+      ],
+      "type": "object"
+    },
+    "SearchRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "stypeIn": {
+          "$ref": "#/$defs/SymbolType"
+        },
+        "v": {
+          "default": 1,
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dataset",
+        "query",
+        "stypeIn"
+      ],
+      "type": "object"
+    },
+    "SearchResponse": {
+      "properties": {
+        "requestId": {
+          "type": "string"
+        },
+        "results": {
+          "items": {
+            "$ref": "#/$defs/SearchResult"
+          },
+          "type": "array"
+        },
+        "v": {
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "v",
+        "requestId",
+        "results"
+      ],
+      "type": "object"
+    },
+    "SearchResult": {
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stypeIn": {
+          "$ref": "#/$defs/SymbolType"
+        },
+        "symbol": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset",
+        "symbol",
+        "stypeIn"
+      ],
+      "type": "object"
+    },
+    "ServerEvent": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "resolvedSymbols": {
+              "items": {
+                "$ref": "#/$defs/SymbolMapping"
+              },
+              "type": "array"
+            },
+            "state": {
+              "$ref": "#/$defs/ProviderState"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "subscribed",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId",
+            "state",
+            "resolvedSymbols"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "bars": {
+              "items": {
+                "$ref": "#/$defs/ChartBar"
+              },
+              "type": "array"
+            },
+            "metadata": {
+              "items": {
+                "$ref": "#/$defs/MetadataPoint"
+              },
+              "type": "array"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "snapshot",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "volumes": {
+              "items": {
+                "$ref": "#/$defs/VolumePoint"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "subscriptionId",
+            "bars",
+            "volumes",
+            "metadata"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/ChartBar"
+            },
+            "meta": {
+              "$ref": "#/$defs/BarMetadata"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "bar",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "volume": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/VolumePoint"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "subscriptionId",
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/StatusReason"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "state": {
+              "$ref": "#/$defs/ProviderState"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "status",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "subscriptionId",
+            "state",
+            "retryable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "effectiveFrom": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "instrumentId": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "requestedSymbol": {
+              "type": "string"
+            },
+            "resolvedSymbol": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "symbol_mapping",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "subscriptionId",
+            "requestedSymbol",
+            "resolvedSymbol",
+            "instrumentId",
+            "effectiveFrom"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "unsubscribed",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "subscriptionId"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "subscriptionId": {
+              "type": "string"
+            },
+            "targetCommandId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "cancelled",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "commandId",
+            "targetCommandId",
+            "subscriptionId"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commandId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "error": {
+              "$ref": "#/$defs/ProviderError"
+            },
+            "subscriptionId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "const": "error",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "error"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "serverTime": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "type": {
+              "const": "heartbeat",
+              "type": "string"
+            },
+            "v": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "type",
+            "v",
+            "serverTime"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "SourceSchema": {
+      "enum": [
+        "ohlcv-1s",
+        "ohlcv-1m",
+        "ohlcv-1h",
+        "ohlcv-1d"
+      ],
+      "type": "string"
+    },
+    "StatusReason": {
+      "enum": [
+        "initial_connect",
+        "handoff_replay",
+        "replay_completed",
+        "upstream_disconnect",
+        "downstream_disconnect",
+        "retry_scheduled",
+        "retry_exhausted",
+        "client_unsubscribe",
+        "server_shutdown",
+        "slow_consumer"
+      ],
+      "type": "string"
+    },
+    "SymbolMapping": {
+      "properties": {
+        "dataset": {
+          "type": "string"
+        },
+        "effectiveFrom": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "effectiveTo": {
+          "format": "int64",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "instrumentId": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "requestedSymbol": {
+          "type": "string"
+        },
+        "resolvedSymbol": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset",
+        "requestedSymbol",
+        "resolvedSymbol",
+        "instrumentId",
+        "effectiveFrom"
+      ],
+      "type": "object"
+    },
+    "SymbolType": {
+      "enum": [
+        "raw_symbol",
+        "instrument_id",
+        "parent",
+        "continuous"
+      ],
+      "type": "string"
+    },
+    "VolumePoint": {
+      "properties": {
+        "color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "time": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "value": {
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "time",
+        "value"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Machine-generated from services/databento-gateway/src/protocol.rs. Regenerate with: UPDATE_PROTOCOL_SCHEMA=1 cargo test -p databento-gateway --features json-schema protocol_contract_schema. Structural contract only; semantic invariants (safe-integer times, volume/bar time equality, event ordering) are enforced by the Rust and Zod validators.",
+  "roots": {
+    "BarPageResponse": {
+      "$ref": "#/$defs/BarPageResponse"
+    },
+    "ClientCommand": {
+      "$ref": "#/$defs/ClientCommand"
+    },
+    "DatasetResponse": {
+      "$ref": "#/$defs/DatasetResponse"
+    },
+    "ErrorResponse": {
+      "$ref": "#/$defs/ErrorResponse"
+    },
+    "HistoryRequest": {
+      "$ref": "#/$defs/HistoryRequest"
+    },
+    "ResolveRequest": {
+      "$ref": "#/$defs/ResolveRequest"
+    },
+    "ResolveResponse": {
+      "$ref": "#/$defs/ResolveResponse"
+    },
+    "SearchRequest": {
+      "$ref": "#/$defs/SearchRequest"
+    },
+    "SearchResponse": {
+      "$ref": "#/$defs/SearchResponse"
+    },
+    "ServerEvent": {
+      "$ref": "#/$defs/ServerEvent"
+    }
+  },
+  "title": "Databento Lightweight Charts protocol v1"
+}

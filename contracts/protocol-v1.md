@@ -38,3 +38,7 @@ Continuous symbols remain session-pinned. During reconnect the gateway resolves 
 ## Fixture format
 
 Fixtures are JSON documents with `valid`, `direction`, and `payload`. `direction` is `http-response`, `client-command`, or `server-event`. Fixtures in `valid` must parse under the TypeScript Zod schemas; fixtures in `invalid` must not parse. They contain only sanitized synthetic market data.
+
+## Machine-readable schema
+
+`protocol-v1.schema.json` is generated from the gateway's `protocol.rs` types via `schemars` and committed here. A gateway test (`protocol_contract_schema`) fails when it is stale; regenerate with `UPDATE_PROTOCOL_SCHEMA=1 cargo test -p databento-gateway --features json-schema protocol_contract_schema`. A TypeScript contract test validates every valid fixture against the generated schema. The schema captures structure only (shapes, required fields, closed objects, tagged unions); semantic invariants such as safe-integer times, volume/bar time equality, and event ordering are enforced by the Rust and Zod validators, not the schema.
