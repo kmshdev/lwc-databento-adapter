@@ -8,14 +8,14 @@ This file is the traceable route for the multipass review. It records what was i
 
 | Input | Pin or observed state | Use |
 | --- | --- | --- |
-| Lightweight Charts checkout | `/Users/kmsh/code/lightweight-charts` at `65e78a0d61e086aeceee15eda32be1614d16c246` (`5.2.1`) | Primary source for documentation, tutorials, public API, renderers, views, models, and test-runner design |
+| Lightweight Charts checkout | local sibling checkout at `65e78a0d61e086aeceee15eda32be1614d16c246` (`5.2.1`) | Primary source for documentation, tutorials, public API, renderers, views, models, and test-runner design |
 | Core documentation | 26 indexed files under `website/docs` | Pass A: core chart contracts and primitive rendering |
 | Tutorials | 93 indexed files under `website/tutorials` | Pass B: examples, user workflows, and production-like composition patterns |
 | Source | `src/standalone.ts` plus bounded `api`, `model`, `renderers`, `views`, `helpers`, and `plugins` inventory | Confirm documentation against implementation and prefer built-in APIs |
 | Databento Rust client | Context7 `/databento/databento-rs`; Firecrawl official repository and documentation results | Confirm live, replay, historical, and symbology boundaries |
 | DBN | Context7 `/databento/dbn` | Confirm record, timestamp, schema, and metadata contracts |
 
-The mistaken paths containing `/Users/kmsh/code/Users/lightweight-charts` are normalized to the discovered checkout above. No upstream files are changed by this review.
+Mistaken paths discovered during the review were normalized to the checkout above. No upstream files are changed by this review.
 
 ## Review graph
 

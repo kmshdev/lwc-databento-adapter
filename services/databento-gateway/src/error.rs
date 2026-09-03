@@ -128,6 +128,15 @@ impl GatewayError {
         }
     }
 
+    pub fn range_too_large(message: &'static str) -> Self {
+        Self::InvalidRequest {
+            code: ProviderErrorCode::RangeTooLarge,
+            message,
+            details: BTreeMap::new(),
+            retryable: false,
+        }
+    }
+
     pub fn unsupported_parent_series(message: &'static str) -> Self {
         Self::InvalidRequest {
             code: ProviderErrorCode::UnsupportedParentSeries,

@@ -114,4 +114,63 @@ describe('Databento data provider', () => {
       'Provider configuration is invalid',
     );
   });
+
+  it('rejects a pending subscribe_bars command when the gateway sends a commandId-only error', async () => {
+    let dispatchMessage: ((data: string) => void) | undefined;
+    class SubscribeErrorSocket {
+      public static readonly OPEN = 1;
+      public readyState = SubscribeErrorSocket.OPEN;
+      private listeners = new Map<string, ((event: Event) => void)[]>();
+
+      public send(payload: string): void {
+        const command = JSON.parse(payload) as { type: string; commandId: string };
+        if (command.type !== 'subscribe_bars') return;
+        queueMicrotask(() =>
+          dispatchMessage?.(
+            JSON.stringify({
+              v: 1,
+              type: 'error',
+              commandId: command.commandId,
+              error: {
+                code: 'invalid_request',
+                message: 'no upstream mapping',
+                retryable: false,
+                details: {},
+              },
+            }),
+          ),
+        );
+      }
+
+      public close(): void {
+        this.readyState = 3;
+      }
+
+      public addEventListener(type: string, listener: (event: Event) => void): void {
+        const list = this.listeners.get(type) ?? [];
+        list.push(listener);
+        this.listeners.set(type, list);
+        if (type === 'open') queueMicrotask(() => listener(new Event('open')));
+        if (type === 'message')
+          dispatchMessage = (data: string) => listener({ data } as unknown as Event);
+      }
+    }
+    vi.stubGlobal('WebSocket', SubscribeErrorSocket);
+    const provider = createDatabentoDataProvider(config);
+    await expect(
+      provider.subscribeBars(
+        {
+          dataset: 'GLBX.MDP3',
+          symbol: 'ESZ4',
+          stypeIn: 'raw_symbol',
+          resolution: '1m',
+        } as never,
+        { onBar: vi.fn() },
+      ),
+    ).rejects.toMatchObject({ code: 'invalid_request' });
+    expect(
+      (provider as unknown as { subscriptions: Map<string, unknown> }).subscriptions.size,
+    ).toBe(0);
+    await provider.dispose();
+  });
 });

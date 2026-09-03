@@ -18,7 +18,7 @@ use crate::config::GatewayConfig;
 use crate::error::GatewayError;
 use crate::historical::HistoricalSource;
 use crate::normalization::schema_interval_seconds;
-use crate::normalization::{assert_request_bounds, price_to_f64};
+use crate::normalization::{assert_history_interval_cap, assert_request_bounds, price_to_f64};
 use crate::protocol::{
     parse_client_command, BarMetadata, CancelledEvent, ChartBar, ClientCommand, ErrorEvent,
     ErrorResponse, HistoryRequest, MetadataPoint, ProviderError, ProviderErrorCode, ProviderState,
@@ -98,6 +98,9 @@ struct ActiveSubscription {
     mappings: Vec<SymbolMapping>,
     request: crate::protocol::BarRequest,
     live_task: Option<LiveTaskControl>,
+    /// Used to emit a typed error and disconnect this subscription if the
+    /// registry ever reports it as a slow consumer (see `evict_slow_consumer`).
+    outbound: Outbound,
     #[cfg(feature = "databento-compat")]
     registry_key: Option<ResolvedStreamKeyLike>,
 }
@@ -218,13 +221,20 @@ async fn dataset_actor(
     let control = DatasetActorControl { commands };
     let registry = state.live_registry.clone();
     let dataset_for_events = dataset.to_string();
+    let state_for_events = state.clone();
     tokio::spawn(async move {
         while let Some(DatasetLiveEvent { key, event }) = event_receiver.recv().await {
             let retain_for_replay = matches!(event, LiveEvent::Bar(_));
-            let _ = registry
+            let publish = registry
                 .lock()
                 .expect("live registry lock poisoned")
                 .publish_with_replay_retention(&dataset_for_events, &key, event, retain_for_replay);
+            for subscription_id in publish.slow_consumers {
+                let state = state_for_events.clone();
+                tokio::spawn(async move {
+                    evict_slow_consumer(&state, &subscription_id).await;
+                });
+            }
         }
     });
     tokio::spawn(async move {
@@ -316,6 +326,14 @@ pub async fn route_history_bars(
     }
 
     if let Err(error) = assert_request_bounds(request.from, request.to) {
+        return gateway_error(error, headers, None);
+    }
+    if let Err(error) = assert_history_interval_cap(
+        request.from,
+        request.to,
+        request.resolution.as_seconds(),
+        state.config.history_max_intervals,
+    ) {
         return gateway_error(error, headers, None);
     }
 
@@ -719,6 +737,34 @@ fn remove_subscription(state: &AppState, subscription_id: &str) {
     }
 }
 
+/// Notifies and evicts a subscription the live registry reported as a slow
+/// consumer (its bounded per-subscriber queue was full). Without this, a
+/// stalled downstream keeps silently missing bars while the client still
+/// believes it is subscribed and live.
+#[cfg(feature = "databento-compat")]
+async fn evict_slow_consumer(state: &AppState, subscription_id: &str) {
+    let notify = state
+        .live_sessions
+        .lock()
+        .expect("live session lock poisoned")
+        .subscriptions
+        .get(subscription_id)
+        .map(|subscription| (subscription.outbound.clone(), subscription.request.v));
+    if let Some((outbound, v)) = notify {
+        send_error(
+            &outbound,
+            v,
+            None,
+            Some(subscription_id.to_string()),
+            ProviderErrorCode::SlowConsumer,
+            "downstream fell too far behind and was disconnected".to_string(),
+            false,
+        )
+        .await;
+    }
+    remove_subscription(state, subscription_id);
+}
+
 #[cfg(feature = "databento-compat")]
 fn release_dataset_live(
     state: &AppState,
@@ -934,6 +980,7 @@ async fn process_subscribe(
                 mappings: mappings.clone(),
                 request: command.request.clone(),
                 live_task,
+                outbound: socket.clone(),
                 #[cfg(feature = "databento-compat")]
                 registry_key,
             },
@@ -997,6 +1044,25 @@ async fn process_open(
         }
     };
 
+    if let Err(error) = assert_history_interval_cap(
+        command.request.from,
+        command.request.to,
+        command.request.resolution.as_seconds(),
+        state.config.history_max_intervals,
+    ) {
+        send_error(
+            socket,
+            command.request.v,
+            Some(command.command_id),
+            Some(command.subscription_id),
+            error.error_body().code,
+            error.error_body().message,
+            false,
+        )
+        .await;
+        return;
+    }
+
     let available_to = state
         .history_source
         .dataset_metadata(&command.request.dataset)
@@ -1022,7 +1088,20 @@ async fn process_open(
         })
         .await
     {
-        Ok(values) => values,
+        Ok(values) if !values.is_empty() => values,
+        Ok(_) => {
+            send_error(
+                socket,
+                command.request.v,
+                Some(command.command_id),
+                Some(command.subscription_id),
+                ProviderErrorCode::SymbolMappingFailed,
+                "symbol resolution returned no mapping".to_string(),
+                false,
+            )
+            .await;
+            return;
+        }
         Err(error) => {
             let event = crate::protocol::ServerEvent::Error(ErrorEvent {
                 v: command.request.v,
@@ -1323,6 +1402,7 @@ async fn process_open(
                 mappings,
                 request: subscription_request,
                 live_task,
+                outbound: socket.clone(),
                 #[cfg(feature = "databento-compat")]
                 registry_key,
             },
@@ -1664,7 +1744,20 @@ async fn process_resume(
         })
         .await
     {
-        Ok(mappings) => mappings,
+        Ok(mappings) if !mappings.is_empty() => mappings,
+        Ok(_) => {
+            send_error(
+                socket,
+                command.request.v,
+                Some(command.command_id),
+                Some(command.subscription_id),
+                ProviderErrorCode::SymbolMappingFailed,
+                "symbol resolution returned no mapping".to_string(),
+                false,
+            )
+            .await;
+            return;
+        }
         Err(error) => {
             send_error(
                 socket,
@@ -1819,14 +1912,20 @@ async fn process_resume(
             )
             .await;
         });
-        state
+        let mut sessions = state
             .live_sessions
             .lock()
-            .expect("live session lock poisoned")
+            .expect("live session lock poisoned");
+        let subscription = sessions
             .subscriptions
             .get_mut(&command.subscription_id)
-            .expect("resume subscription was checked above")
-            .registry_key = Some(registry_key);
+            .expect("resume subscription was checked above");
+        subscription.registry_key = Some(registry_key);
+        // A resume attaches a new WebSocket connection to the stable
+        // subscription id; refresh the outbound handle so a later
+        // slow-consumer eviction targets the live socket, not the one from
+        // the connection that was replaced.
+        subscription.outbound = socket.clone();
     }
 
     let status = crate::protocol::ServerEvent::Status(StatusEvent {

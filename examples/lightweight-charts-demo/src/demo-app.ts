@@ -28,7 +28,10 @@ import {
 
 const PAGE_THRESHOLD = 30;
 const PAGE_INTERVALS = 300;
-const LIVE_LOOKBACK_INTERVALS = 500;
+// Shared by the provider's history-chunking window and the go-live lookback
+// so the two stay in lockstep (docs/technical-design.md: "computes a bounded
+// live-edge lookback from historyChunkIntervals").
+const HISTORY_CHUNK_INTERVALS = 500;
 
 type Candle = CandlestickData<UTCTimestamp>;
 type SeriesBar = ChartBar;
@@ -151,7 +154,7 @@ export class DemoApp {
     this.tooltip = element(document, 'tooltip');
     this.provider = createDatabentoDataProvider({
       gatewayUrl: import.meta.env.VITE_GATEWAY_URL ?? 'http://127.0.0.1:8080',
-      historyChunkIntervals: 500,
+      historyChunkIntervals: HISTORY_CHUNK_INTERVALS,
       reconnect: { baseDelayMs: 250, maxDelayMs: 4_000, maxAttempts: 5, jitterRatio: 0 },
     });
   }
@@ -354,7 +357,7 @@ export class DemoApp {
       this.abort = controller;
       const activeRequest = {
         ...values,
-        from: (liveEdge - interval * LIVE_LOOKBACK_INTERVALS) as UTCTimestamp,
+        from: (liveEdge - interval * HISTORY_CHUNK_INTERVALS) as UTCTimestamp,
         to: now as UTCTimestamp,
       };
       const result = await this.provider.openBars(

@@ -317,6 +317,34 @@ class Provider implements DatabentoDataProvider {
       this.pending.delete(pending.command.commandId);
       return;
     }
+    if (event.type === 'error') {
+      const error = new DatabentoProviderError(
+        event.error.code,
+        event.error.message,
+        event.error.retryable,
+        undefined,
+        event.subscriptionId,
+        event.error.details,
+      );
+      if (subscription) {
+        subscription.fail(error);
+        this.subscriptions.delete(subscription.id);
+      }
+      if (event.commandId) {
+        const pending = this.pending.get(event.commandId);
+        // The failing command's own subscription may not be resolvable by
+        // subscriptionId yet (e.g. the gateway rejected it before ever
+        // confirming one) — fail and forget it via the pending entry so it
+        // doesn't leak in `this.subscriptions`.
+        if (pending && !subscription) {
+          pending.subscription.fail(error);
+          this.subscriptions.delete(pending.subscription.id);
+        }
+        pending?.reject(error);
+        this.pending.delete(event.commandId);
+      }
+      return;
+    }
     if (!subscription) return;
     if (event.type === 'bar') {
       subscription.emitBar(event.data.time, () => {
@@ -350,23 +378,6 @@ class Provider implements DatabentoDataProvider {
       this.pending.delete(event.commandId);
       return;
     }
-    if (event.type === 'error') {
-      const error = new DatabentoProviderError(
-        event.error.code,
-        event.error.message,
-        event.error.retryable,
-        undefined,
-        event.subscriptionId,
-        event.error.details,
-      );
-      subscription.fail(error);
-      this.subscriptions.delete(subscription.id);
-      if (event.commandId) {
-        const pending = this.pending.get(event.commandId);
-        pending?.reject(error);
-        this.pending.delete(event.commandId);
-      }
-    }
   }
 
   private handleFault(error: Error): void {
@@ -396,6 +407,7 @@ class Provider implements DatabentoDataProvider {
       return;
     }
     for (const subscription of this.subscriptions.values()) subscription.setState('reconnecting');
+    if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.reconnectTimer = setTimeout(
       () => {
         void this.resumeAll();

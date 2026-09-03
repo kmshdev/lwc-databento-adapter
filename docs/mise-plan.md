@@ -66,7 +66,7 @@ Rules:
 When implementation is authorized, the developer performs and reviews:
 
 ```sh
-cd /Users/kmsh/code/lwc-databento-adapter
+cd <repo-root>
 mise trust
 mise doctor
 mise install

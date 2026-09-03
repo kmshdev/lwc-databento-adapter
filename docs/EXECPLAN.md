@@ -1,6 +1,6 @@
 # Build and iterate the online-beta Databento adapter for Lightweight Charts
 
-This ExecPlan is a living document governed by `/Users/kmsh/.codex/agent/PLANS.md`. Keep `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` current as implementation proceeds.
+This ExecPlan is a living document governed by the agent's local ExecPlan process guide. Keep `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` current as implementation proceeds.
 
 ## Purpose / Big Picture
 

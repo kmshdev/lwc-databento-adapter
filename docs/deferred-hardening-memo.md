@@ -86,3 +86,15 @@ Track valuable work intentionally deferred while the project performs online bet
 - Expanded the isolated consumer proof across history, live handoff, streaming updates, symbology, metadata, and disposal.
 - Deferred deep security, penetration, soak, broad browser-matrix, and production SLO work. Essential server-side credentials, bounded input, typed continuity failures, and the application authentication/entitlement boundary remain mandatory.
 - Registry release remains blocked on package-scope ownership, license selection, and release identity. Online deployment remains blocked on a named target and its basic access/entitlement integration.
+
+### 2026-09-03 — OSS-readiness review, fixes, and public-repo cleanup
+
+- Ran a three-agent cohesive code review across `services/databento-gateway`, `packages/databento-lightweight-charts`, and `examples/lightweight-charts-demo`/`contracts/`/docs cross-references, ahead of publishing this repository as a public open-source project.
+- Fixed a client-controlled unbounded aggregation range (HTTP `route_history_bars` and WS `open_bars`) that could drive an unbounded loop/allocation; both paths now enforce `history_max_intervals` via `assert_history_interval_cap`.
+- Fixed live-registry slow-consumer detections being silently discarded, which let a stalled downstream keep missing bars while appearing subscribed; slow subscriptions are now notified with a typed `slow_consumer` error and evicted.
+- Fixed `open_bars`/`resume_bars` accepting an empty resolved-mapping list (a latent panic path if a `HistoricalSource` ever returns `Ok(vec![])`), matching the existing `subscribe_bars` guard.
+- Fixed the browser adapter dropping `error` events that carry only `commandId` (no `subscriptionId`), which left `openBars`/`subscribeBars` promises hanging forever with a leaked subscription entry.
+- Fixed `handleClose` clobbering a still-pending reconnect timer, which could produce duplicate concurrent reconnect/resume cycles.
+- Fixed a documentation/implementation drift: the demo's live-edge lookback now shares one constant with `historyChunkIntervals` instead of an independent hardcoded value that happened to match by coincidence.
+- Cleaned up the working tree for public release: removed the untracked, third-party AI-skill bundle (`.agents/`, `skills-lock.json`, both already git-ignored globally) and scrubbed local absolute filesystem paths (`/Users/kmsh/...`) leaked in `docs/EXECPLAN.md`, `docs/mise-plan.md`, and `docs/review-route.md`. No credentials were present in tracked history (`scripts/scan-secrets.sh` passes clean).
+- Deferred, unchanged: broad security overhauls, penetration/soak testing, and production SLO work remain out of scope for the online-beta phase.

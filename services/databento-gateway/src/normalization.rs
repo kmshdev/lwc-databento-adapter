@@ -199,6 +199,54 @@ pub fn metadata_error(message: &'static str) -> GatewayError {
     GatewayError::protocol(message, crate::protocol::ProviderErrorCode::ProtocolError)
 }
 
+/// Bounds the number of aggregation buckets a `[from, to)` range can produce
+/// at `resolution_seconds`, so a client-controlled range can never drive an
+/// unbounded loop/allocation in `aggregation::aggregate`.
+pub fn assert_history_interval_cap(
+    from: i64,
+    to: i64,
+    resolution_seconds: i64,
+    max_intervals: usize,
+) -> Result<(), GatewayError> {
+    if resolution_seconds <= 0 {
+        return Err(GatewayError::invalid_range("resolution must be positive"));
+    }
+    let span = to.saturating_sub(from).max(0);
+    let intervals = span.div_euclid(resolution_seconds) + 1;
+    if intervals as u64 > max_intervals as u64 {
+        return Err(GatewayError::range_too_large(
+            "requested range exceeds the maximum number of bars for this resolution",
+        ));
+    }
+    Ok(())
+}
+
 pub fn as_json_error(message: &str) -> serde_json::Value {
     json!({ "message": message })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::protocol::ProviderErrorCode;
+
+    #[test]
+    fn interval_cap_accepts_a_range_within_the_configured_maximum() {
+        assert!(assert_history_interval_cap(0, 3_600, 60, 100).is_ok());
+    }
+
+    #[test]
+    fn interval_cap_rejects_a_range_that_would_produce_too_many_buckets() {
+        // A DoS-style request spanning the full safe-integer range at 1s
+        // resolution must be rejected instead of driving an unbounded
+        // aggregation loop.
+        let error = assert_history_interval_cap(0, 9_007_199_254_740_991, 1, 10_000)
+            .expect_err("range far exceeds max_intervals");
+        assert_eq!(error.error_body().code, ProviderErrorCode::RangeTooLarge);
+    }
+
+    #[test]
+    fn interval_cap_rejects_a_non_positive_resolution() {
+        assert!(assert_history_interval_cap(0, 100, 0, 10_000).is_err());
+    }
 }
