@@ -20,7 +20,7 @@ All of the following must be true before qualification can begin:
 
 The repository contains no evidence that a site, provider, port, service order, or installed cross-connect has been selected. Creating any of those has commercial and external infrastructure effects and requires explicit user authorization.
 
-The dated provider shortlist, recommended 10G DC3 pilot, and ready-to-send questions are in `docs/dedicated-connectivity-rfq.md`. The shortlist proves facility presence only; it does not prove that any provider will permit the Databento cross-connect.
+The dated provider shortlist, recommended 10G DC3 pilot, and ready-to-send questions are in `docs/project/dedicated-connectivity-rfq.md`. The shortlist proves facility presence only; it does not prove that any provider will permit the Databento cross-connect.
 
 ## Acceptance evidence
 

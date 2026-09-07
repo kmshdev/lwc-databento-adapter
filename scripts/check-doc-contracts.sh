@@ -9,20 +9,20 @@ required_docs='README.md
 ARCHITECTURE.md
 CODING_GUIDELINES.md
 Project_Folders_Structure_Blueprint.md
-docs/EXECPLAN.md
-docs/requirements.md
+docs/project/EXECPLAN.md
+docs/project/requirements.md
 docs/technical-design.md
-docs/implementation-plan.md
+docs/project/implementation-plan.md
 docs/test-strategy.md
-docs/traceability.md
+docs/project/traceability.md
 docs/decision-log.md
-docs/review-route.md
+docs/project/review-route.md
 docs/lightweight-charts-core-knowledge.md
 docs/lightweight-charts-tutorial-knowledge.md
-docs/mise-plan.md
-docs/reviewer-convergence.md
-docs/dedicated-connectivity-plan.md
-docs/dedicated-connectivity-rfq.md'
+docs/project/mise-plan.md
+docs/project/reviewer-convergence.md
+docs/project/dedicated-connectivity-plan.md
+docs/project/dedicated-connectivity-rfq.md'
 
 printf '%s\n' "$required_docs" | while IFS= read -r path; do
   if [ ! -s "$repo_root/$path" ]; then
@@ -35,15 +35,15 @@ for contract_phrase in \
   'barsInLogicalRange' \
   'lightweight-chart-react' \
   'user-resizable pane'; do
-  if ! rg -Fq "$contract_phrase" "$repo_root/docs/requirements.md"; then
+  if ! rg -Fq "$contract_phrase" "$repo_root/docs/project/requirements.md"; then
     printf 'required Lightweight Charts contract missing from requirements: %s\n' "$contract_phrase" >&2
     exit 1
   fi
 done
 
-rg -o 'REQ-(F|Q)-[0-9]{3}' "$repo_root/docs/requirements.md" \
+rg -o 'REQ-(F|Q)-[0-9]{3}' "$repo_root/docs/project/requirements.md" \
   | sort -u >"$tmp_dir/requirements.ids"
-rg -o 'REQ-(F|Q)-[0-9]{3}' "$repo_root/docs/traceability.md" \
+rg -o 'REQ-(F|Q)-[0-9]{3}' "$repo_root/docs/project/traceability.md" \
   | sort -u >"$tmp_dir/traceability.ids"
 
 if ! diff -u "$tmp_dir/requirements.ids" "$tmp_dir/traceability.ids"; then
@@ -51,10 +51,10 @@ if ! diff -u "$tmp_dir/requirements.ids" "$tmp_dir/traceability.ids"; then
   exit 1
 fi
 
-rg -o '^### TASK-[0-9]{2}' "$repo_root/docs/implementation-plan.md" \
+rg -o '^### TASK-[0-9]{2}' "$repo_root/docs/project/implementation-plan.md" \
   | sed 's/^### //' \
   | sort -u >"$tmp_dir/tasks.ids"
-rg -o 'TASK-[0-9]{2}' "$repo_root/docs/traceability.md" \
+rg -o 'TASK-[0-9]{2}' "$repo_root/docs/project/traceability.md" \
   | sort -u >"$tmp_dir/traced-tasks.ids"
 
 if ! diff -u "$tmp_dir/tasks.ids" "$tmp_dir/traced-tasks.ids"; then
@@ -64,12 +64,11 @@ fi
 
 for decision in DEC-014 DEC-015 DEC-016; do
   for path in \
-    README.md \
-    docs/EXECPLAN.md \
-    docs/requirements.md \
+    docs/project/EXECPLAN.md \
+    docs/project/requirements.md \
     docs/technical-design.md \
-    docs/implementation-plan.md \
-    docs/traceability.md \
+    docs/project/implementation-plan.md \
+    docs/project/traceability.md \
     docs/decision-log.md; do
     if ! rg -q "$decision" "$repo_root/$path"; then
       printf '%s is missing from %s\n' "$decision" "$path" >&2
@@ -98,7 +97,7 @@ for command in \
     printf 'release command missing from test strategy: %s\n' "$command" >&2
     exit 1
   fi
-  if ! rg -Fq "$command" "$repo_root/docs/implementation-plan.md"; then
+  if ! rg -Fq "$command" "$repo_root/docs/project/implementation-plan.md"; then
     printf 'release command missing from implementation plan: %s\n' "$command" >&2
     exit 1
   fi

@@ -31,7 +31,7 @@ Build a mixed Rust and TypeScript monorepo that lets browser applications load D
 - [ ] Audit every local and supplied Databento requirement against current code, tests, configuration, documentation, and bounded runtime evidence; keep every ledger entry honestly classified.
 - [x] (2026-08-31) Established the repeatable production-preview page-load gate. The only route, `/`, measured p95 20.6 ms, 19.1 ms, and 21.2 ms across three consecutive cache-disabled runs, below the 50 ms threshold each time.
 - [x] (2026-08-31) Verified the dedicated-connectivity source and separated its published 42.4-microsecond 90th-percentile physical handoff from browser and gateway latency.
-- [ ] Provision and qualify a 10G or 25G Databento Live Raw TCP cross-connect at DC3 or Equinix NY4/5; completion requires the circuit-specific sub-50-microsecond receipt in `docs/dedicated-connectivity-plan.md`.
+- [ ] Provision and qualify a 10G or 25G Databento Live Raw TCP cross-connect at DC3 or Equinix NY4/5; completion requires the circuit-specific sub-50-microsecond receipt in `docs/project/dedicated-connectivity-plan.md`.
 - [x] (2026-08-31) Researched the current DC3 provider market and prepared a no-secrets RFQ. Beeks is the recommended small-footprint pilot candidate; Options Technology and Avelacom remain alternatives pending written Databento cross-connect confirmation.
 - [x] (2026-08-31) Verified official outreach routes for Databento and all three shortlisted providers and added a written-response ledger. No message has been sent and no commercial commitment has been made.
 - [ ] Run the complete offline and authorized live gates, review and simplify each significant slice, and commit each verified slice without including secrets or unrelated state.
@@ -85,7 +85,7 @@ Build a mixed Rust and TypeScript monorepo that lets browser applications load D
   Evidence: `RUSTFLAGS='-D warnings' cargo check -p databento-gateway` passes after making the helper import unconditional and explicitly consuming the feature-only value in the default build.
 - Observation: the demo has one HTML entry, no router dependency or pathname state, and no alternate Vite build input, so the complete current page inventory is `/`.
   Evidence: three identical benchmark runs reported `/` p95 values of 20.6 ms, 19.1 ms, and 21.2 ms with maxima between 21.0 ms and 23.2 ms.
-- Observation: `docs/implementation-plan.md` still described the pre-implementation skeleton as current state after the workspace, gateway, fixtures, demo, and acceptance tasks existed.
+- Observation: `docs/project/implementation-plan.md` still described the pre-implementation skeleton as current state after the workspace, gateway, fixtures, demo, and acceptance tasks existed.
   Evidence: the statement contradicted the passing full gate and current repository tree; it now identifies the implemented system and current evidence boundaries.
 - Observation: the passing gate did not prove `REQ-Q-003`; the gateway currently has no structured tracing calls, metrics recorder, or tests for the promised operational signals.
   Evidence: source searches for tracing macros, `TraceLayer`, metrics, latency, drop reasons, queue utilization, and redaction found only the internal active-client counter.

@@ -645,7 +645,7 @@ Required counters/gauges/histograms are named in the requirements. Tests use an 
 
 `REQ-Q-006` applies only to the physical Databento Live Raw API TCP handoff. The qualifying topology is a 10G or 25G cross-connect at DC3 or Equinix NY4/5. Its 90th-percentile measurement begins at Databento's boundary switch and ends when the last byte leaves onto the customer cross-connect.
 
-The Rust gateway remains downstream of this boundary. Its socket receive, decoding, normalization, aggregation, fan-out, and browser delivery latencies require separate timestamps and percentiles. No application benchmark may be relabeled as the cross-connect result. The complete provisioning and evidence contract is in `docs/dedicated-connectivity-plan.md`.
+The Rust gateway remains downstream of this boundary. Its socket receive, decoding, normalization, aggregation, fan-out, and browser delivery latencies require separate timestamps and percentiles. No application benchmark may be relabeled as the cross-connect result. The complete provisioning and evidence contract is in `docs/project/dedicated-connectivity-plan.md`.
 
 ## Dependencies and versions researched on 2026-08-30
 
@@ -687,4 +687,4 @@ Implementation must run compatibility spikes before locking versions because reg
 - Lightweight Charts 5.2 `setData` and `update` guidance: https://tradingview.github.io/lightweight-charts/docs
 - Lightweight Charts realtime example: https://tradingview.github.io/lightweight-charts/tutorials/demos/realtime-updates
 - Lightweight Charts infinite-history example: https://tradingview.github.io/lightweight-charts/tutorials/demos/infinite-history
-- Local Lightweight Charts source pin and review coverage: `docs/review-route.md` and `docs/lightweight-charts-core-knowledge.md`.
+- Local Lightweight Charts source pin and review coverage: `docs/project/review-route.md` and `docs/lightweight-charts-core-knowledge.md`.

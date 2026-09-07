@@ -16,7 +16,7 @@ Mixed Rust/TypeScript monorepo: Rust gateway owns Databento credentials and mark
 - Deliver the smallest coherent online-beta slice that exercises the real workflow and stable public interfaces.
 - Credentials stay server-side; bound and validate external inputs; errors must not claim false continuity or success.
 - Do not start network-security overhauls, full production hardening, broad security scans, penetration testing, soak testing, or complex test-infrastructure projects.
-- After a conversation that changes or reviews the project, record deferred work in `docs/deferred-hardening-memo.md`.
+- After a conversation that changes or reviews the project, record deferred work in `docs/project/deferred-hardening-memo.md`.
 - Online-beta deployment is in scope only when the task names the target and access boundary; never invent credentials or expose Databento keys to a browser.
 - Preserve user changes. Stop before destructive or secret-bearing actions. Product decisions: `docs/decision-log.md`.
 
@@ -46,15 +46,16 @@ Mixed Rust/TypeScript monorepo: Rust gateway owns Databento credentials and mark
 ## Project References
 | Need | File |
 | --- | --- |
-| Requirements | `docs/requirements.md` |
+| Documentation index | `docs/README.md` |
+| Requirements | `docs/project/requirements.md` |
 | Architecture and public contracts | `docs/technical-design.md` |
-| Tasks and acceptance | `docs/implementation-plan.md` |
+| Tasks and acceptance | `docs/project/implementation-plan.md` |
 | Test scope | `docs/test-strategy.md` |
-| Requirement-to-proof | `docs/traceability.md` |
+| Requirement-to-proof | `docs/project/traceability.md` |
 | Decisions | `docs/decision-log.md` |
 | Lightweight Charts constraints | `docs/lightweight-charts-core-knowledge.md` |
-| Deferred hardening | `docs/deferred-hardening-memo.md` |
-| Mise ownership | `docs/mise-plan.md` |
+| Deferred hardening | `docs/project/deferred-hardening-memo.md` |
+| Mise ownership | `docs/project/mise-plan.md` |
 | Consumer API | `packages/databento-lightweight-charts/README.md` |
 
 ## Phase Transition

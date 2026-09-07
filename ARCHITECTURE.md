@@ -37,6 +37,11 @@ Dependency direction is application → adapter → protocol → gateway → Dat
 ├── AGENTS.md
 ├── ARCHITECTURE.md
 ├── CODING_GUIDELINES.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── CHANGELOG.md
+├── LICENSE
 ├── Project_Folders_Structure_Blueprint.md  # pointer to this file
 ├── Cargo.toml
 ├── deny.toml
@@ -59,8 +64,12 @@ Dependency direction is application → adapter → protocol → gateway → Dat
 │   ├── src/{demo-app.ts,main.ts,style.css}
 │   └── test/e2e/
 ├── docs/
+│   ├── README.md       # developer/agent-facing reference index
+│   ├── AGENTS.md
+│   ├── adr/
+│   └── project/        # spec-driven-development process archive, not developer docs
 ├── scripts/
-└── .github/workflows/ci.yml
+└── .github/{workflows/ci.yml,ISSUE_TEMPLATE/,PULL_REQUEST_TEMPLATE.md}
 ```
 
 pnpm workspaces: `packages/*`, `examples/*`. Cargo workspace member: `services/databento-gateway`.
@@ -75,7 +84,7 @@ pnpm workspaces: `packages/*`, `examples/*`. Cargo workspace member: `services/d
 
 ## Navigation
 
-Start from `docs/EXECPLAN.md`, then `contracts/protocol-v1.md`, `services/databento-gateway/src/main.rs`, `packages/databento-lightweight-charts/src/index.ts`, `examples/lightweight-charts-demo/src/main.ts`.
+Start from `docs/project/EXECPLAN.md`, then `contracts/protocol-v1.md`, `services/databento-gateway/src/main.rs`, `packages/databento-lightweight-charts/src/index.ts`, `examples/lightweight-charts-demo/src/main.ts`.
 
 Update this file when a top-level workspace, public entry point, or enforced placement rule changes. Count non-generated files with:
 

@@ -26,7 +26,7 @@ A3 Databento + DBN ───┘            │                    │
                                     └── product forks ───┴──> user decision
 ```
 
-Dependencies are strict: adapter-level acceptance criteria may be written after A1–A3, but implementation cannot begin until every product fork in `decision-log.md` is resolved.
+Dependencies are strict: adapter-level acceptance criteria may be written after A1–A3, but implementation cannot begin until every product fork in `docs/decision-log.md` is resolved.
 
 ## Pass definitions
 

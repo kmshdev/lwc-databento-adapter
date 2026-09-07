@@ -19,15 +19,15 @@ The repository contains the planning documents, folder blueprint, guard scripts,
 
 The normative behavior is in:
 
-- `docs/requirements.md`: version 1 scope and requirement IDs.
+- `docs/project/requirements.md`: version 1 scope and requirement IDs.
 - `docs/technical-design.md`: component ownership, APIs, message schema, algorithms, and dependency boundaries.
 - `docs/test-strategy.md`: test layers and gates.
-- `docs/traceability.md`: requirement-to-proof mapping.
+- `docs/project/traceability.md`: requirement-to-proof mapping.
 - `docs/decision-log.md`: evidence, assumptions, and decisions.
-- `docs/review-route.md`: source pins, pass dependencies, and evidence limitations.
+- `docs/project/review-route.md`: source pins, pass dependencies, and evidence limitations.
 - `docs/lightweight-charts-core-knowledge.md`: chart API and primitive constraints.
 - `docs/lightweight-charts-tutorial-knowledge.md`: planned user surface and browser matrix.
-- `docs/mise-plan.md`: configuration, secret, trust, and task ownership.
+- `docs/project/mise-plan.md`: configuration, secret, trust, and task ownership.
 
 ## Definitions
 
@@ -189,7 +189,7 @@ Acceptance criteria:
 
 ### TASK-12 — Provision and qualify dedicated Live connectivity
 
-Select DC3, NY4, or NY5; select a colocation provider or managed services provider; obtain explicit commercial approval; arrange the Databento 10G or 25G Live Raw API TCP cross-connect; and collect the circuit-specific latency receipt defined in `docs/dedicated-connectivity-plan.md`.
+Select DC3, NY4, or NY5; select a colocation provider or managed services provider; obtain explicit commercial approval; arrange the Databento 10G or 25G Live Raw API TCP cross-connect; and collect the circuit-specific latency receipt defined in `docs/project/dedicated-connectivity-plan.md`.
 
 Acceptance criteria:
 

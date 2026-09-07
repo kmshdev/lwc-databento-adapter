@@ -2,6 +2,15 @@
   "name": "@lwc-databento/adapter",
   "version": "0.1.0",
   "description": "Framework-neutral Databento history and live-bar provider for Lightweight Charts",
+  "license": "MIT",
+  "author": "kmshdev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmshdev/lwc-databento-adapter.git",
+    "directory": "packages/databento-lightweight-charts"
+  },
+  "bugs": "https://github.com/kmshdev/lwc-databento-adapter/issues",
+  "homepage": "https://github.com/kmshdev/lwc-databento-adapter/tree/main/packages/databento-lightweight-charts#readme",
   "files": [
     "dist"
   ],

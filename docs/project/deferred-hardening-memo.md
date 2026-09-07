@@ -111,7 +111,7 @@ Track valuable work intentionally deferred while the project performs online bet
 - Fixed the browser adapter dropping `error` events that carry only `commandId` (no `subscriptionId`), which left `openBars`/`subscribeBars` promises hanging forever with a leaked subscription entry.
 - Fixed `handleClose` clobbering a still-pending reconnect timer, which could produce duplicate concurrent reconnect/resume cycles.
 - Fixed a documentation/implementation drift: the demo's live-edge lookback now shares one constant with `historyChunkIntervals` instead of an independent hardcoded value that happened to match by coincidence.
-- Cleaned up the working tree for public release: removed the untracked, third-party AI-skill bundle (`.agents/`, `skills-lock.json`, both already git-ignored globally) and scrubbed local absolute filesystem paths (`/Users/kmsh/...`) leaked in `docs/EXECPLAN.md`, `docs/mise-plan.md`, and `docs/review-route.md`. No credentials were present in tracked history (`scripts/scan-secrets.sh` passes clean).
+- Cleaned up the working tree for public release: removed the untracked, third-party AI-skill bundle (`.agents/`, `skills-lock.json`, both already git-ignored globally) and scrubbed local absolute filesystem paths (`/Users/kmsh/...`) leaked in `docs/project/EXECPLAN.md`, `docs/project/mise-plan.md`, and `docs/project/review-route.md`. No credentials were present in tracked history (`scripts/scan-secrets.sh` passes clean).
 - Deferred, unchanged: broad security overhauls, penetration/soak testing, and production SLO work remain out of scope for the online-beta phase.
 
 ### 2026-09-04 — Additive BarFeed/bindSeries wrapper implemented

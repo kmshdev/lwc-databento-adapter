@@ -2,6 +2,11 @@
   "name": "lwc-databento-adapter-workspace",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmshdev/lwc-databento-adapter.git"
+  },
   "scripts": {
     "test": "pnpm run test:rust && pnpm run test:typescript && pnpm run test:gateway",
     "test:e2e:offline": "pnpm run test:browser",
