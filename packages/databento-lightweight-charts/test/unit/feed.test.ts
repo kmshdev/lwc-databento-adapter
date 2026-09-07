@@ -57,7 +57,9 @@ function fakeProvider(
     subscribeBars: vi.fn().mockResolvedValue(fakeSubscription()),
     resolveSymbol: vi.fn().mockResolvedValue([]),
     searchSymbols: vi.fn().mockResolvedValue([]),
-    getDatasetMetadata: vi.fn().mockResolvedValue({ dataset: 'GLBX.MDP3', schemas: [], publishers: [] }),
+    getDatasetMetadata: vi
+      .fn()
+      .mockResolvedValue({ dataset: 'GLBX.MDP3', schemas: [], publishers: [] }),
     dispose: vi.fn().mockResolvedValue(undefined),
   };
 }
@@ -89,6 +91,30 @@ describe('toBarFeed', () => {
     expect(capturedHandlers?.onState).toBeUndefined();
     expect(capturedHandlers?.onError).toBeUndefined();
     expect(capturedHandlers?.onSymbolMapping).toBeUndefined();
+  });
+
+  it('attaches a same-tick onVolume call to its matching BarEvent', async () => {
+    const volume = { time: 0 as UTCTimestamp, value: 42 };
+    const provider = fakeProvider((handlers) => {
+      handlers.onBar(initialPage.bars[0]!, meta);
+      handlers.onVolume?.(volume, meta);
+    });
+    const feed = toBarFeed(provider);
+    const onBar = vi.fn();
+    await feed.openBars(request, { onBar });
+    await Promise.resolve();
+    expect(onBar).toHaveBeenCalledWith({ bar: initialPage.bars[0], meta, volume });
+  });
+
+  it('emits a bar without volume when no onVolume call follows it', async () => {
+    const provider = fakeProvider((handlers) => {
+      handlers.onBar(initialPage.bars[0]!, meta);
+    });
+    const feed = toBarFeed(provider);
+    const onBar = vi.fn();
+    await feed.openBars(request, { onBar });
+    await Promise.resolve();
+    expect(onBar).toHaveBeenCalledWith({ bar: initialPage.bars[0], meta, volume: undefined });
   });
 });
 
@@ -143,5 +169,23 @@ describe('bindSeries', () => {
     await bindSeries({ setData: vi.fn(), update: vi.fn() }, feed, request, { onState });
 
     expect(onState).toHaveBeenCalledWith('live');
+  });
+
+  it('disposes the subscription and rethrows if series.setData throws', async () => {
+    const disposedSubscription = fakeSubscription();
+    const provider: DatabentoDataProvider = {
+      ...fakeProvider(() => {}),
+      openBars: vi.fn(async () => ({ initial: initialPage, subscription: disposedSubscription })),
+    };
+    const feed = toBarFeed(provider);
+    const setDataError = new Error('non-ascending data');
+    const setData = vi.fn(() => {
+      throw setDataError;
+    });
+
+    await expect(bindSeries({ setData, update: vi.fn() }, feed, request)).rejects.toThrow(
+      setDataError,
+    );
+    expect(disposedSubscription.dispose).toHaveBeenCalledOnce();
   });
 });

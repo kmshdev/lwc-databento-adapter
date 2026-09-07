@@ -4,8 +4,8 @@ use std::fs;
 use std::path::PathBuf;
 
 use databento_gateway::protocol::{
-    BarPageResponse, ClientCommand, DatasetResponse, ErrorResponse, HistoryRequest,
-    ResolveRequest, ResolveResponse, SearchRequest, SearchResponse, ServerEvent,
+    BarPageResponse, ClientCommand, DatasetResponse, ErrorResponse, HistoryRequest, ResolveRequest,
+    ResolveResponse, SearchRequest, SearchResponse, ServerEvent,
 };
 use schemars::generate::SchemaSettings;
 use serde_json::{json, Map, Value};
@@ -46,10 +46,7 @@ fn generate_schema_document() -> Value {
     root!("DatasetResponse", DatasetResponse);
     root!("ErrorResponse", ErrorResponse);
 
-    let definitions: Map<String, Value> = generator
-        .take_definitions(true)
-        .into_iter()
-        .collect();
+    let definitions: Map<String, Value> = generator.take_definitions(true).into_iter().collect();
 
     let ordered_roots: Map<String, Value> = ROOT_ORDER
         .iter()

@@ -92,7 +92,7 @@ const provider = createDatabentoDataProvider({ /* ... */ });
 const feed = toBarFeed(provider);
 const series = chart.addSeries(CandlestickSeries);
 
-const live = await bindSeries(feed, series, {
+const subscription = await bindSeries(series, feed, {
   dataset: 'GLBX.MDP3',
   symbol: 'ES.c.0',
   stypeIn: 'continuous',
@@ -102,7 +102,7 @@ const live = await bindSeries(feed, series, {
 });
 
 // Component teardown:
-await live.subscription.dispose();
+await subscription.dispose();
 await provider.dispose();
 ```
 

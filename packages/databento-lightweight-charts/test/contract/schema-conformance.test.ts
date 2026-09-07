@@ -15,8 +15,7 @@ interface SchemaDocument {
 
 const contractsUrl = new URL('../../../../contracts/', import.meta.url);
 
-const loadJson = async <T>(url: URL): Promise<T> =>
-  JSON.parse(await readFile(url, 'utf8')) as T;
+const loadJson = async <T>(url: URL): Promise<T> => JSON.parse(await readFile(url, 'utf8')) as T;
 
 const schemaDocument = await loadJson<SchemaDocument>(
   new URL('protocol-v1.schema.json', contractsUrl),

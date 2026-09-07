@@ -5,6 +5,7 @@ import type {
   WhitespaceData,
 } from 'lightweight-charts';
 import type {
+  BarHandlers,
   BarMetadata,
   BarPage,
   BarRequest,
@@ -70,24 +71,56 @@ export interface ISeriesApiLike {
   update(bar: FeedBar, historicalUpdate?: boolean): void;
 }
 
+/**
+ * Bridges a {@link BarSink} to the provider's {@link BarHandlers}. The
+ * provider dispatches `onBar` and then, synchronously and only when volume
+ * data exists for that same bar, `onVolume` for the identical `meta`
+ * reference (see `emitBar` in `provider/index.ts`) — there is no combined
+ * "bar with volume" event on the wire. A bar is therefore queued via a
+ * microtask rather than forwarded to `sink.onBar` immediately, so a
+ * same-tick `onVolume` call has a chance to attach its volume first; the
+ * microtask always runs after that synchronous pair completes.
+ */
+function toBarHandlers(sink: BarSink): BarHandlers {
+  let pendingBar: FeedBar | undefined;
+  let pendingMeta: BarMetadata | undefined;
+  let pendingVolume: HistogramData<UTCTimestamp> | undefined;
+
+  const flush = () => {
+    if (pendingBar === undefined || pendingMeta === undefined) return;
+    sink.onBar({
+      bar: pendingBar,
+      meta: pendingMeta,
+      ...(pendingVolume !== undefined ? { volume: pendingVolume } : {}),
+    });
+    pendingBar = undefined;
+    pendingMeta = undefined;
+    pendingVolume = undefined;
+  };
+
+  return {
+    onBar: (bar, meta) => {
+      flush();
+      pendingBar = bar;
+      pendingMeta = meta;
+      pendingVolume = undefined;
+      queueMicrotask(flush);
+    },
+    onVolume: (volume, meta) => {
+      if (pendingMeta === meta) pendingVolume = volume;
+    },
+    ...(sink.onState ? { onState: sink.onState } : {}),
+    ...(sink.onError ? { onError: sink.onError } : {}),
+    ...(sink.onSymbolMapping ? { onSymbolMapping: sink.onSymbolMapping } : {}),
+  };
+}
+
 /** Wraps an existing {@link DatabentoDataProvider} as a {@link BarFeed}. */
 export function toBarFeed(provider: DatabentoDataProvider): BarFeed {
   return {
     getBars: (request) => provider.getBars(request),
-    openBars: (request, sink) =>
-      provider.openBars(request, {
-        onBar: (bar, meta) => sink.onBar({ bar, meta }),
-        ...(sink.onState ? { onState: sink.onState } : {}),
-        ...(sink.onError ? { onError: sink.onError } : {}),
-        ...(sink.onSymbolMapping ? { onSymbolMapping: sink.onSymbolMapping } : {}),
-      }),
-    subscribeBars: (request, sink) =>
-      provider.subscribeBars(request, {
-        onBar: (bar, meta) => sink.onBar({ bar, meta }),
-        ...(sink.onState ? { onState: sink.onState } : {}),
-        ...(sink.onError ? { onError: sink.onError } : {}),
-        ...(sink.onSymbolMapping ? { onSymbolMapping: sink.onSymbolMapping } : {}),
-      }),
+    openBars: (request, sink) => provider.openBars(request, toBarHandlers(sink)),
+    subscribeBars: (request, sink) => provider.subscribeBars(request, toBarHandlers(sink)),
   };
 }
 
@@ -108,6 +141,11 @@ export async function bindSeries(
     onBar: (event) => series.update(event.bar, event.historicalUpdate),
     ...handlers,
   });
-  series.setData(initial.bars);
+  try {
+    series.setData(initial.bars);
+  } catch (error) {
+    await subscription.dispose();
+    throw error;
+  }
   return subscription;
 }
