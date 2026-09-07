@@ -4,7 +4,6 @@ set -eu
 required_paths='AGENTS.md
 ARCHITECTURE.md
 CODING_GUIDELINES.md
-Project_Folders_Structure_Blueprint.md
 contracts/AGENTS.md
 contracts/protocol-v1.md
 packages/databento-lightweight-charts/AGENTS.md

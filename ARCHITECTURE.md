@@ -1,6 +1,6 @@
 # Architecture
 
-This repository is one local gateway, one framework-neutral browser adapter, and one plain TypeScript demo. It is not a microservice fleet. Public contracts live in `docs/technical-design.md` and `contracts/protocol-v1.md`. This file is the layout map and layer boundary.
+This repository is one local gateway, one framework-neutral browser adapter, and one plain TypeScript demo. It is not a microservice fleet. Public contracts live in `docs/technical-design.md` and `contracts/protocol-v1.md`. This file is the canonical layout map, placement rules, and layer boundary for the project.
 
 ```text
 Lightweight Charts application
@@ -42,7 +42,6 @@ Dependency direction is application → adapter → protocol → gateway → Dat
 ├── SECURITY.md
 ├── CHANGELOG.md
 ├── LICENSE
-├── Project_Folders_Structure_Blueprint.md  # pointer to this file
 ├── Cargo.toml
 ├── deny.toml
 ├── package.json

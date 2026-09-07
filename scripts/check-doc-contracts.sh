@@ -8,7 +8,6 @@ trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
 required_docs='README.md
 ARCHITECTURE.md
 CODING_GUIDELINES.md
-Project_Folders_Structure_Blueprint.md
 docs/project/EXECPLAN.md
 docs/project/requirements.md
 docs/technical-design.md
